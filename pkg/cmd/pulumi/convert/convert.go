@@ -553,7 +553,7 @@ func generateAndLinkSdksForPackages(
 			continue
 		}
 
-		pkgSpec, _, err := packages.SchemaFromSchemaSource(
+		pkgSchema, _, err := packages.SchemaFromSchemaSource(
 			pctx,
 			pkg.Name,
 			&plugin.ParameterizeValue{Value: pkg.Parameterization.Value},
@@ -561,11 +561,6 @@ func generateAndLinkSdksForPackages(
 		)
 		if err != nil {
 			return fmt.Errorf("creating package schema: %w", err)
-		}
-
-		pkgSchema, err := packages.BindSpec(*pkgSpec)
-		if err != nil {
-			return fmt.Errorf("binding package schema: %w", err)
 		}
 
 		diags, err := packages.GenSDK(

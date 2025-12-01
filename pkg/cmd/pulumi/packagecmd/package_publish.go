@@ -17,7 +17,6 @@ package packagecmd
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -62,7 +61,7 @@ type packagePublishCmd struct {
 	defaultOrg    func(context.Context, backend.Backend, *workspace.Project) (string, error)
 	extractSchema func(
 		pctx *plugin.Context, packageSource string, parameters plugin.ParameterizeParameters, registry registry.Registry,
-	) (*schema.PackageSpec, *workspace.PackageSpec, error)
+	) (*schema.Package, *workspace.PackageSpec, error)
 	pluginDir string
 }
 
@@ -192,16 +191,13 @@ func (cmd *packagePublishCmd) Run(
 		return errors.New("no package name specified, please set one in the package schema")
 	}
 	var version semver.Version
-	if pkg.Version != "" {
-		version, err = semver.Parse(pkg.Version)
-		if err != nil {
-			return fmt.Errorf("invalid version %q in package schema: %w", pkg.Version, err)
-		}
+	if pkg.Version != nil {
+		version = *pkg.Version
 	} else {
 		return errors.New("no version specified, please set a version in the package schema")
 	}
 
-	jsonData, err := json.Marshal(pkg)
+	json, err := pkg.MarshalJSON()
 	if err != nil {
 		return fmt.Errorf("failed to marshal schema: %w", err)
 	}
@@ -237,7 +233,7 @@ func (cmd *packagePublishCmd) Run(
 		Publisher: publisher,
 		Name:      name,
 		Version:   version,
-		Schema:    bytes.NewReader(jsonData),
+		Schema:    bytes.NewReader(json),
 		Readme:    readmeBytes,
 	}
 

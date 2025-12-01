@@ -56,8 +56,12 @@ If a folder either the plugin binary must match the folder name (e.g. 'aws' and 
 			}()
 
 			parameters := &plugin.ParameterizeArgs{Args: args[1:]}
-			spec, _, err := packages.SchemaFromSchemaSource(pctx, source, parameters,
+			pkg, _, err := packages.SchemaFromSchemaSource(pctx, source, parameters,
 				cmdCmd.NewDefaultRegistry(cmd.Context(), pkgWorkspace.Instance, nil, cmdutil.Diag(), env.Global()))
+			if err != nil {
+				return err
+			}
+			spec, err := pkg.MarshalSpec()
 			if err != nil {
 				return err
 			}
@@ -73,13 +77,6 @@ If a folder either the plugin binary must match the folder name (e.g. 'aws' and 
 			if len(bytes) != n {
 				return fmt.Errorf("only wrote %d/%d bytes of the schema", len(bytes), n)
 			}
-
-			// Also try to bind the schema to warn about any diagnostics:
-			_, err = packages.BindSpec(*spec)
-			if err != nil {
-				return fmt.Errorf("failed to bind schema: %w", err)
-			}
-
 			return nil
 		},
 	}
