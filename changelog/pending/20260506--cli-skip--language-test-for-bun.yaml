@@ -1,0 +1,4 @@
+changes:
+- type: feat
+  scope: cli
+  description: Exclude another nodejs language test for bun
