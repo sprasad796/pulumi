@@ -5,6 +5,9 @@ STDERR=$(mktemp -t previous-version-output.XXXXXX)
 
 # Capture the stderr and success status of this command:
 set +e
+SET_REPO="$(gh repo set-default pulumi/pulumi)"
+SUCCESS=$?
+
 PREVIOUS_VERSION="$(gh release view --json 'tagName' -q '.tagName' 2>"${STDERR}")"
 SUCCESS=$?
 set -e
