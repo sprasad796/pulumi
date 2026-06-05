@@ -45,8 +45,13 @@ jobs:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
       - name: Print rate limits
+        id: get_latest_release
         continue-on-error: true
-        run: gh api -i repos/${{ github.repository }}/releases/latest
+        run: |
+          gh api -i repos/${{ github.repository }}/releases/latest
+      - name: Report the status of last command
+        if: ${{ steps.get_latest_release.outcome == 'failure' }}
+        run: echo "Getting the lastest release of repo ${{ github.repository }} failes!" 
       - name: Compute version
         id: version
         env:
