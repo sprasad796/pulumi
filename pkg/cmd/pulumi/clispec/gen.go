@@ -155,7 +155,7 @@ func getMergedRules(overrides *Overrides, commandPath []string) map[string]FlagR
 		depth int
 		scope OverridesScope
 	}
-	var applicable []scored
+	applicable := make([]scored, len(overrides.Scopes))
 	for _, scope := range overrides.Scopes {
 		if len(scope.Path) > len(commandPath) {
 			continue

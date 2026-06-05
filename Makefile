@@ -49,11 +49,12 @@ ensure: .make/ensure/go .make/ensure/phony $(SUB_PROJECTS:%=%_ensure)
 
 .PHONY: build-proto build_proto
 PROTO_SOURCES := $(sort $(shell find proto -name '*.proto')) proto/generate.sh
+CURRENT_DIR = $(shell pwd)
 build-proto: build_proto
 build_proto: .make/proto
 .make/proto: $(PROTO_SOURCES)
-	cd proto && ./generate.sh
-	@mkdir -p .make && touch $@
+	bash $(CURRENT_DIR)/proto/generate.sh
+	@mkdir -p .make && touch .make/proto
 
 .PHONY: check-proto check_proto
 check-proto: check_proto
