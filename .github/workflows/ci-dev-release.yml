@@ -29,7 +29,13 @@ jobs:
 
       - name: Git describe
         id: ghd
-        uses: proudust/gh-describe@v1
+        uses: proudust/gh-describe@v2
+        with:
+           token: ${{ secrets.GITHUB_TOKEN }}
+           repo:  ${{ github.repository }}
+           match: "v*.*.*"
+           exclude: "*-alpha,*-beta"
+           default: "v1.0.0" # Use this tag if no tag is found, instead of failing
       - name: strip prefix
         id: strip-prefix
         # Always prefix the short_sha with a letter to ensure it's a valid semver prerelease,
