@@ -60,6 +60,11 @@ jobs:
         run: |
           if [ "$(git ls-remote https://github.com/pulumi/pulumi HEAD | cut -f 1)" = "${{ github.sha }}" ]; then
             short_sha="x${{ steps.ghd.outputs.short-sha }}"
+            if [ -z "$short_sha" ]; then
+              short_sha="x$(git rev-parse --short HEAD)"
+            else
+              short_sha="x${short_sha}"
+            fi
             version="${{ needs.info.outputs.version }}"
             version="${version#v}-alpha.${short_sha}"
             pulumictl dispatch -c pulumi-cli-dev-version -r pulumi/docs dev_version="$version"
