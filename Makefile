@@ -40,12 +40,15 @@ TEST_ALL_DEPS ?= build $(SUB_PROJECTS:%=%_install)
 # pkg/engine/lifecycletest for more information.
 LIFECYCLE_TEST_FUZZ_CHECKS ?= 10000
 
-ensure: .make/ensure/go .make/ensure/phony $(SUB_PROJECTS:%=%_ensure)
+ensure: .make/ensure/go .make/ensure/phony .make/ensure/wasm-opt $(SUB_PROJECTS:%=%_ensure)
 .make/ensure/phony: sdk/go.mod pkg/go.mod tests/go.mod
 	cd sdk && ../scripts/retry go mod download
 	cd pkg && ../scripts/retry go mod download
 	cd tests && ../scripts/retry go mod download
 	@mkdir -p .make/ensure && touch .make/ensure/phony
+.make/ensure/wasm-opt:
+	@which wasm-opt > /dev/null || (echo "Installing wasm-opt..." && npm install -g wasm-opt)
+	@mkdir -p .make/ensure && touch .make/ensure/wasm-opt
 
 .PHONY: build-proto build_proto
 PROTO_SOURCES := $(sort $(shell find proto -name '*.proto')) proto/generate.sh
@@ -85,7 +88,7 @@ test-nodejs-automation-api:: generate-cli-spec
 
 .PHONY: generate-python-automation-api
 generate-python-automation-api:: generate-cli-spec
-	cd sdk/python/tools/automation && pip install -q -r requirements.txt && python main.py ../../../../tools/automation/specification.json boilerplate/standard.py ../../lib/pulumi/automation/interface
+	cd sdk/python/tools/automation && pip install -q -r requirements.txt && python main.py ../../../../tools/automation/specification.json boilerplate/standard.py ../../lib/pulumi/automation/interface[...]
 
 .PHONY: test-python-automation-api
 test-python-automation-api::
@@ -110,9 +113,15 @@ bin/pulumi: .make/proto .make/ensure/go $(shell bin/helpmakego pkg/cmd/pulumi)
 	go build -C pkg -o ../$@ -tags="${GO_BUILD_TAGS}" -ldflags "-X github.com/pulumi/pulumi/sdk/v3/go/common/version.Version=${VERSION}" ${PROJECT}
 
 .PHONY: bin/pulumi-display.wasm
-bin/pulumi-display.wasm:: .make/ensure/go .make/ensure/phony pkg/backend/display/wasm/gold-size.txt
-	cd pkg && GOOS=js GOARCH=wasm go build -o ../bin/pulumi-display.wasm -tags="${GO_BUILD_TAGS}" -ldflags "-w -s -X github.com/pulumi/pulumi/sdk/v3/go/common/version.Version=${VERSION}" -trimpath ./backend/display/wasm
-	python3 scripts/wasm-size-check.py bin/pulumi-display.wasm pkg/backend/display/wasm/gold-size.txt
+bin/pulumi-display.wasm:: .make/ensure/go .make/ensure/phony .make/ensure/wasm-opt pkg/backend/display/wasm/gold-size.txt
+	cd pkg && GOOS=js GOARCH=wasm go build \
+            -o ../bin/pulumi-display.wasm \
+            -tags="${GO_BUILD_TAGS}" \
+            -mod=readonly \
+            -ldflags="-w -s -B 0xdeadbeef -X github.com/pulumi/pulumi/sdk/v3/go/common/version.Version=${VERSION}" \
+            -trimpath ./backend/display/wasm
+	wasm-opt -Oz -c --enable-bulk-memory --enable-nontrapping-float-to-int -o bin/pulumi-display.wasm bin/pulumi-display.wasm
+	python3 scripts/wasm-size-check.py -u bin/pulumi-display.wasm pkg/backend/display/wasm/gold-size.txt
 
 .PHONY: build
 build:: export GOBIN=$(shell realpath ./bin)
@@ -305,6 +314,7 @@ get_schemas: \
 			schema-aws!4.26.0           \
 			schema-aws!5.4.0            \
 			schema-aws!5.16.2           \
+			schema-azure!4.18.0         \
 			schema-kubernetes!3.0.0     \
 			schema-kubernetes!3.7.0     \
 			schema-random!4.11.2        \
