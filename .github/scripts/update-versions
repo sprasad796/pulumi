@@ -93,7 +93,7 @@ for n in $(seq 0 1 "$((N-1))"); do
         versionString=$(envsubst '$SEMVER,$VERSION,$MAJOR,$MINOR,$PATCH,$PRERELEASE,$BUILD' <<< "$versionFormat")
 
         if [ "$TOOL" == "sed" ]; then
-          sed --in-place -E "s/$updatePath/$versionString/" "$file"
+          sed -iE 's/$updatePath/$versionString/' "$file"
         else
           tool $TOOL_ARGS "$updatePath = \"$versionString\"" "$file"
         fi
