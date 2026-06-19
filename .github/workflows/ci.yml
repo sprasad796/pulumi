@@ -473,6 +473,8 @@ jobs:
     needs: [matrix]
     with:
       ref: ${{ inputs.ref }}
+      GOTOOLCHAIN: "auto"
+      go-version: '>=1.25.11' # decoupled from version sets, only used by gotestsum
       version: ${{ inputs.version }}
       platform: ubuntu-latest
       test-name: Fuzz test
