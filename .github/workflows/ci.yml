@@ -77,6 +77,8 @@ on:
       GCP_SERVICE_ACCOUNT:
         required: false
         description: "GCP service account, required to run tests against GCP"
+env:
+  GOTOOLCHAIN: "auto"
 
 jobs:
   # Computes the cheap outputs every other job fans out from. This job must stay fast: the
