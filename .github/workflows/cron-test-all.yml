@@ -61,6 +61,10 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.25.x'
       - name: CI failed
         if: ${{ needs.ci.result != 'success' }}
         run: exit 1
