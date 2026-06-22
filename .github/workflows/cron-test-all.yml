@@ -22,7 +22,8 @@ jobs:
     steps:
       - uses: actions/setup-go@v6
         with:
-          ref: ${{ inputs.ref }}
+          go-version-file: 'go.mod'
+          cache: true
           go-version: '1.25.x'
 
   info:
