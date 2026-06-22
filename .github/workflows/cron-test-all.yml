@@ -9,9 +9,25 @@ on:
     - cron: "27 5 * * *"
   workflow_dispatch: {}
 
+env:
+  GOTOOLCHAIN: 'auto'
+
 jobs:
+  gosetup:
+    runs-on: ubuntu-latest
+    name: Set up Go
+    defaults:
+      run:
+        shell: bash {0}
+    steps:
+      - uses: actions/setup-go@v6
+        with:
+          ref: ${{ inputs.ref }}
+          go-version: '1.25.x'
+
   info:
     name: info
+    needs: [gosetup]
     uses: ./.github/workflows/ci-info.yml
     permissions:
       contents: read
@@ -62,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
         with:
           go-version: '1.25.x'
       - name: CI failed
