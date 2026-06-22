@@ -9,12 +9,12 @@ on:
     - cron: "27 5 * * *"
   workflow_dispatch: {}
 
-env:
-  GOTOOLCHAIN: 'auto'
-
 jobs:
   gosetup:
     runs-on: ubuntu-latest
+    env:
+      GOTOOLCHAIN: 'auto'
+
     name: Set up Go
     defaults:
       run:
