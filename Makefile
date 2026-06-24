@@ -45,7 +45,7 @@ LIFECYCLE_TEST_FUZZ_CHECKS ?= 10000
 
 ensure: .make/ensure/go .make/ensure/phony $(SUB_PROJECTS:%=%_ensure)
 .make/ensure/phony: sdk/go.mod pkg/go.mod tests/go.mod
-	cd sdk && ../scripts/retry go mod download
+	cd sdk && ../scripts/retry go mod download 
 	cd pkg && ../scripts/retry go mod download
 	cd tests && ../scripts/retry go mod download
 	@mkdir -p .make/ensure && touch .make/ensure/phony
@@ -206,7 +206,7 @@ $(CUSTOM_GCL): $(CUSTOM_GCL_DEPS) .make/ensure/golangci-lint
 
 define lint_golang_pkg
 	@echo "[golangci-lint] Linting $(1)..."
-	@(cd $(1) && $(abspath $(CUSTOM_GCL)) run $(GOLANGCI_LINT_ARGS) \
+	@(cd $(1) && go mod tidy && go mod vendor && $(abspath $(CUSTOM_GCL)) run $(GOLANGCI_LINT_ARGS) \
 			--config $(GOLANGCI_LINT_CONFIG) \
 			--max-same-issues 0 \
 			--max-issues-per-linter 0 \
