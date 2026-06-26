@@ -73,6 +73,8 @@ install_plugin:: build_plugin
 
 install:: install_package install_plugin
 
+export PULUMI_TEST_ORG := $(shell pulumi whoami --json | jq ".organizations[0]")
+
 test_go:: $(TEST_ALL_DEPS)
 	@cd cmd/pulumi-language-python && \
 		$(GO_TEST) ${PROJECT_PKGS}
@@ -81,6 +83,7 @@ test_fast:: $(TEST_ALL_DEPS)
 	. .venv/*/activate && ./scripts/test_fast.sh
 
 test_auto:: $(TEST_ALL_DEPS)
+	@echo ${PULUMI_TEST_ORG}
 	. .venv/*/activate && ./scripts/test_auto.sh
 
 test_all:: test_fast test_auto test_go
@@ -93,7 +96,6 @@ test_auto_lowest_deps:: ensure_lowest
 
 test_all_lowest_deps:: test_fast_lowest_deps test_auto_lowest_deps
 
-PULUMI_TEST_ORG ?= $(shell pulumi whoami --json | jq ".organizations[0]")
 
 dist:: GOBIN=$(or $(shell go env GOBIN),$(shell go env GOPATH)/bin)
 dist::

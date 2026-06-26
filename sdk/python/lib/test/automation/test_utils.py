@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import subprocess
 import uuid
 from contextlib import contextmanager
 
@@ -41,15 +42,34 @@ def stack_cleanup(stack: Stack, destroy: bool = True):
             stack.workspace.remove_stack(stack.name, force=True)
 
 
-def get_test_org():
-    env_var = os.getenv("PULUMI_TEST_ORG")
-    if env_var is not None:
-        return env_var
-    if os.getenv("PULUMI_ACCESS_TOKEN") is None:
-        return "organization"
-    test_org = "moolumi"
-    return test_org
+def get_local_pulumi_org() -> str:
+    default_org = "poolumi"
+    try:
+    	local_org = subprocess.run(
+           ["pulumi whoami --json | jq -r '.organizations[0]'"],
+           shell=True,
+           capture_output=True,
+           text=True,
+           check=True
+    	)
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed with exit code {e.returncode}")
 
+    print(" local is ", local_org)
+    if local_org is not None:
+        if local_org.stdout.strip() != "null":
+        	default_org = local_org.stdout.strip() 
+
+    return default_org
+ 
+def get_test_org():
+    test_org = os.getenv("PULUMI_TEST_ORG")
+
+    if test_org is None:
+    	if os.getenv("PULUMI_ACCESS_TOKEN") is None:
+        	return get_local_pulumi_org()
+
+    return test_org
 
 def get_test_suffix() -> str:
     return str(uuid.uuid4())
