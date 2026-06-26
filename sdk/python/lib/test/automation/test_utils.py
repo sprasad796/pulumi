@@ -62,7 +62,7 @@ def get_local_pulumi_org() -> str:
 
     return default_org
  
-def get_test_org():
+def get_test_org() -> str:
     test_org = os.getenv("PULUMI_TEST_ORG")
 
     if test_org is None:
