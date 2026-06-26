@@ -61,7 +61,7 @@ def get_local_pulumi_org() -> str:
         	default_org = local_org.stdout.strip() 
 
     return default_org
- 
+
 def get_test_org() -> str:
     test_org = os.getenv("PULUMI_TEST_ORG")
 
