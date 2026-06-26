@@ -21,7 +21,7 @@ export PATH:=$(shell yarn bin 2>/dev/null):$(PATH)
 
 ensure:: .make/ensure/yarn .make/ensure/node .make/ensure/phony
 .make/ensure/phony: package.json
-	../../scripts/retry yarn install --frozen-lockfile
+	../../scripts/retry yarn install
 	@mkdir -p .make/ensure && touch .make/ensure/phony
 
 format:: ensure
