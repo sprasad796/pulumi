@@ -220,6 +220,13 @@ jobs:
           ( cd pkg && go test -run "_________" ./... )
           ( cd sdk && go build -trimpath ./... )
       - name: Install delve
+        with:
+          go-version: ${{ fromJson(inputs.version-set).go }}
+          check-latest: true
+          cache: true
+          cache-dependency-path: |
+            pkg/go.sum
+            .gocache.tmp
         run: |
           go install github.com/go-delve/delve/cmd/dlv@latest
       - name: Set up uv
