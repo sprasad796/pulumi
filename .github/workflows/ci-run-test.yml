@@ -204,6 +204,9 @@ jobs:
           cache-dependency-path: |
             pkg/go.sum
             .gocache.tmp
+      - name: Install delve
+        run: | 
+          go install github.com/go-delve/delve/cmd/dlv@latest
       - name: Prime Go cache
         if: ${{ ! steps.setup-go.outputs.cache-hit }}
         # Compile every test to ensure we populate a good cache entry. The
