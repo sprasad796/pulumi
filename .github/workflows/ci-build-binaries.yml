@@ -2,6 +2,7 @@ name: Build Binaries
 
 permissions:
   contents: read
+  id-token: write
 
 on:
   workflow_call:
@@ -105,6 +106,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOOS: ${{ inputs.os }}
           GOARCH: ${{ inputs.arch }}
+          GOTOOLCHAIN: 'auto'
         run: ./scripts/prep-for-goreleaser.sh local
       - name: Show files and permissions
         if: ${{ runner.os != 'macOS'}}

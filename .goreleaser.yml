@@ -9,6 +9,7 @@ builds:
   binary: pulumi
   dir: pkg
   main: ./cmd/pulumi
+  no_main_check: true
   tool: ../scripts/go-wrapper.sh
   env:
   - GO111MODULE=on

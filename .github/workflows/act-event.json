@@ -1,8 +1,9 @@
 {
   "inputs": {
     "ref": "sprasad/fix-org-new",
-    "version": "v3.248.0-alpha.1782745229",
-    "test-retries": "0",
-    "fuzz-test-optional": "false"
+    "arch": "arm64",
+    "build-platform": "ubuntu-latest",
+    "os": "darwin",
+    "artifact-suffix": "test"
   }
 }

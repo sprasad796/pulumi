@@ -49,8 +49,8 @@
         "eslint": "7.32.0",
         "eslint-plugin-header": "3.1.1",
         "eslint-plugin-import": "2.30.0",
-        "mocha": "11.7.5",
-        "nyc": "15.1.0",
+        "mocha": "^11.3.0",
+        "nyc": "^18.0.0",
         "ts-node": "7.0.1",
         "tsx": "4.19.3",
         "typescript": "3.8.3"
@@ -74,8 +74,14 @@
         "node": ">=22"
     },
     "mocha": {
-        "require": ["source-map-support/register"],
-        "node-option": ["import=tsx"]
+        "require": [
+            "source-map-support/register"
+        ],
+        "node-option": [
+            "import=tsx"
+        ]
     },
-    "//": ["NOTE: @types/node is pinned due to grpc/grpc-node#2002"]
+    "//": [
+        "NOTE: @types/node is pinned due to grpc/grpc-node#2002"
+    ]
 }
