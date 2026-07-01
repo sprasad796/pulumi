@@ -57,6 +57,7 @@ defaults:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GOTOOLCHAIN: 'auto'
 
 jobs:
   build:
@@ -84,6 +85,7 @@ jobs:
       - name: Configure Go Cache Key
         env:
           CACHE_KEY: "${{ fromJson(inputs.version-set).go }}-${{ runner.os }}-${{ runner.arch }}-target-${{ inputs.os }}-${{ inputs.arch }}-cov-${{ inputs.enable-coverage && inputs.os == 'linux' }}-race-${{ inputs.enable-race-detection }}"
+          GOTOOLCHAIN: 'auto'
         run: echo "$CACHE_KEY" > .gocache.tmp
       - uses: actions/setup-go@v6
         with:
