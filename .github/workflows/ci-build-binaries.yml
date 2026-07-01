@@ -2,7 +2,7 @@ name: Build Binaries
 
 permissions:
   contents: read
-  id-token: write
+  id-token: none
 
 on:
   workflow_call:
