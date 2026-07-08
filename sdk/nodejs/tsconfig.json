@@ -7,7 +7,7 @@
         "declaration": true,
         "resolveJsonModule": true,
         "sourceMap": true,
-	"skipLibCheck": true,
+        "skipLibCheck": true,
         "stripInternal": true,
         "experimentalDecorators": true,
         "pretty": true,
