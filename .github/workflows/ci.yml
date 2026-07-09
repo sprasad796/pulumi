@@ -103,14 +103,7 @@ jobs:
           echo "::endgroup::"
           printf '%s' "${VERSION_SET}" | ./.github/scripts/set-output version-set
 
-          BUILD_TARGETS='[
-              { "os": "linux",   "arch": "amd64", "build-platform": "ubuntu-latest" },
-              { "os": "linux",   "arch": "arm64", "build-platform": "ubuntu-latest" },
-              { "os": "windows", "arch": "amd64", "build-platform": "ubuntu-latest" },
-              { "os": "windows", "arch": "arm64", "build-platform": "ubuntu-latest" },
-              { "os": "darwin",  "arch": "amd64", "build-platform": "ubuntu-latest" },
-              { "os": "darwin",  "arch": "arm64", "build-platform": "ubuntu-latest" }
-          ]'
+          BUILD_TARGETS='[{"os": "linux", "arch": "amd64", "build-platform": "ubuntu-latest"}]'
           printf '%s' "${BUILD_TARGETS}" | ./.github/scripts/set-output build-targets
     outputs:
       version-set: "${{ fromJson(steps.setup.outputs.version-set) }}"
@@ -181,6 +174,14 @@ jobs:
           readarray -td' ' VERSION_SETS_TO_TEST < <(echo -n "$TEST_VERSION_SETS"); declare -p VERSION_SETS_TO_TEST;
           readarray -td' ' INTEGRATION_PLATFORMS < <(echo -n "$INPUT_INTEGRATION_TEST_PLATFORMS"); declare -p INTEGRATION_PLATFORMS;
           readarray -td' ' ACCEPTANCE_PLATFORMS < <(echo -n "$INPUT_ACCEPTANCE_TEST_PLATFORMS"); declare -p ACCEPTANCE_PLATFORMS;
+          BUILD_TARGETS = [
+              { "os": "linux",   "arch": "amd64", "build-platform": "ubuntu-latest" },
+              { "os": "linux",   "arch": "arm64", "build-platform": "ubuntu-latest" },
+              { "os": "windows", "arch": "amd64", "build-platform": "ubuntu-latest" },
+              { "os": "windows", "arch": "arm64", "build-platform": "ubuntu-latest" },
+              { "os": "darwin",  "arch": "amd64", "build-platform": "ubuntu-latest" },
+              { "os": "darwin",  "arch": "arm64", "build-platform": "ubuntu-latest" }
+          ]
 
           CODEGEN_TESTS_FLAG=--codegen-tests
           PKG_UNIT_TEST_PARTITIONS=7
