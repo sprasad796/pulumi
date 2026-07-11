@@ -299,6 +299,9 @@ jobs:
           printf '%s' "${INTEGRATION_TEST_MATRIX}" | ./.github/scripts/set-output integration-test-matrix
           printf '%s' "${ACCEPTANCE_TEST_MATRIX_WIN}" | ./.github/scripts/set-output acceptance-test-matrix-win
           printf '%s' "${ACCEPTANCE_TEST_MATRIX_MACOS}" | ./.github/scripts/set-output acceptance-test-matrix-macos
+          printf '%s' "${VERSION_SET}" | ./.github/scripts/set-output version-set
+          #printf '%s' "$BUILD_TARGETS" | ./.github/scripts/set-output build-targets
+          echo "$BUILD_TARGETS" | ./.github/scripts/set-output build-targets
           echo "::endgroup::"
     outputs:
       build-targets: "${{ steps.matrix.outputs.build-targets }}"
@@ -323,7 +326,7 @@ jobs:
     name: build binaries
     needs: [setup]
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         target: ${{ fromJson(needs.matrix.outputs.build-targets) }}
     uses: ./.github/workflows/ci-build-binaries.yml
