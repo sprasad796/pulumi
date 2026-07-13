@@ -1,0 +1,11 @@
+{
+  "inputs": {
+    "ref": "sprasad/fix-org-new",
+    "arch": "arm64",
+    "build-platform": "ubuntu-latest",
+    "os": "darwin",
+    "version": "1",
+    "version-set": "builds",
+    "artifact-suffix": "test"
+  }
+}

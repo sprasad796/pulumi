@@ -328,7 +328,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ fromJson(needs.matrix.outputs.build-targets) }}
+        target: ${{ needs.matrix.outputs.build-targets }}
     uses: ./.github/workflows/ci-build-binaries.yml
     with:
       ref: ${{ inputs.ref }}
