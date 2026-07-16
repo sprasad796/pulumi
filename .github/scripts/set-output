@@ -23,13 +23,15 @@
 # ```
 
 
-set -euo pipefail
+#set -euo pipefail
 
 OUTPUT_NAME="$1"
 
+#echo "passed var is {$2}"
 if [ "$#" -ge 2 ]; then
-  ESCAPED="$(printf '%s' "$2" | jq -Rsc ".")" # JSON encode the argument
+  ESCAPED=$(printf '%s' "$2" | jq -R ".") # JSON encode the argument
 else
-  ESCAPED="$(jq -Rsc ".")" # JSON encode stdin
+  ESCAPED=$(jq -R ".") # JSON encode stdin
 fi
-echo "${OUTPUT_NAME}=${ESCAPED}" >> "${GITHUB_OUTPUT}"
+
+echo "\"${OUTPUT_NAME}=${ESCAPED}\"" >> ${GITHUB_OUTPUT}
