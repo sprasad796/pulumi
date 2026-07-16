@@ -34,12 +34,11 @@ jobs:
     permissions:
       contents: read
     outputs:
-      version: "${{ fromJSON(steps.version.outputs.version) }}"
-      release-notes: "${{ fromJSON(steps.notes.outputs.release-notes) }}"
+      version: "${{ steps.version.outputs.version }}"
+      release-notes: "${{ steps.notes.outputs.release-notes }}"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_PROD_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
@@ -79,12 +78,12 @@ jobs:
       - name: Extract release notes
         id: notes
         run: |
-          CHANGELOG="$(changie batch "${{ fromJSON(steps.version.outputs.version) }}" --dry-run)"
+          CHANGELOG="$(changie batch "${{ steps.version.outputs.version }}" --dry-run)"
           ./.github/scripts/set-output release-notes "${CHANGELOG}"
       - name: Check version
         if: ${{ !inputs.is-snapshot }}
         run: |
-          PULUMI_VERSION="${{ fromJSON(steps.version.outputs.version) }}"
+          PULUMI_VERSION="${{ steps.version.outputs.version }}"
 
           ./.github/scripts/update-versions "${PULUMI_VERSION}"
 
