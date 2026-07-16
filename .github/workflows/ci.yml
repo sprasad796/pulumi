@@ -106,8 +106,8 @@ jobs:
           BUILD_TARGETS='[{"os": "linux", "arch": "amd64", "build-platform": "ubuntu-latest"}]'
           printf '%s' "${BUILD_TARGETS}" | ./.github/scripts/set-output build-targets
     outputs:
-      version-set: "${{ fromJson(steps.setup.outputs.version-set) }}"
-      build-targets: "${{ fromJson(steps.setup.outputs.build-targets) }}"
+      version-set: "${{ steps.setup.outputs.version-set }}"
+      build-targets: "${{ steps.setup.outputs.build-targets }}"
 
   matrix:
     runs-on: ubuntu-latest
