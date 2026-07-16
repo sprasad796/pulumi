@@ -188,9 +188,21 @@ jobs:
           coverdir="$(mktemp -d)"
           echo "PULUMI_GOCOVERDIR=$coverdir" >> "$GITHUB_ENV"
           echo "GOCOVERDIR=$coverdir" >> "$GITHUB_ENV"
-      - name: Install delve
-        run: | 
-          go install github.com/go-delve/delve/cmd/dlv@latest
+      - name: Configure Go Cache Key
+        env:
+          CACHE_KEY: "${{ fromJson(inputs.version-set).go }}-${{ runner.os }}-${{ runner.arch }}"
+        run: echo "$CACHE_KEY" > .gocache.tmp
+      - uses: actions/setup-go@v6
+        id: setup-go
+        env:
+          SEGMENT_DOWNLOAD_TIMEOUT_MINS: 2
+        with:
+          go-version: ${{ fromJson(inputs.version-set).go }}
+          check-latest: true
+          cache: true
+          cache-dependency-path: |
+            pkg/go.sum
+            .gocache.tmp
       - name: Prime Go cache
         if: ${{ ! steps.setup-go.outputs.cache-hit }}
         # Compile every test to ensure we populate a good cache entry. The
@@ -207,13 +219,6 @@ jobs:
           ( cd pkg && go test -run "_________" ./... )
           ( cd sdk && go build -trimpath ./... )
       - name: Install delve
-        with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
-          check-latest: true
-          cache: true
-          cache-dependency-path: |
-            pkg/go.sum
-            .gocache.tmp
         run: |
           go install github.com/go-delve/delve/cmd/dlv@latest
       - name: Set up uv
