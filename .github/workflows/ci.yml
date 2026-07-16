@@ -477,8 +477,6 @@ jobs:
     name: Fuzz Test
     uses: ./.github/workflows/ci-run-test.yml
     needs: [setup]
-    env:
-      GOTOOLCHAIN: auto
     with:
       ref: ${{ inputs.ref }}
       version: ${{ inputs.version }}
