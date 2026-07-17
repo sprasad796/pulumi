@@ -33,5 +33,4 @@ else
   ESCAPED=$(jq -R ".") # JSON encode stdin
 fi
 
-tr -d '[:space:]' << ${OUTPUT_NAME}=${ESCAPED}
-#echo "${OUTPUT_NAME}=${ESCAPED}"
+echo "${OUTPUT_NAME}=${ESCAPED}" >> "$GITHUB_OUTPUT"

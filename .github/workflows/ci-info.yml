@@ -85,8 +85,8 @@ jobs:
           fi
 
           CHANGELOG="$(changie batch "${{ steps.version.outputs.version }}" --dry-run)"
-          echo "release-notes="$CHANGELOG"" >> "$GITHUB_OUTPUT"
-          #./.github/scripts/set-output release-notes "${CHANGELOG}"
+          #echo "release-notes="$CHANGELOG"" >> "$GITHUB_OUTPUT"
+          ./.github/scripts/set-output.sh release-notes "${CHANGELOG}"
       - name: Check version
         if: ${{ !inputs.is-snapshot }}
         run: |
@@ -94,7 +94,6 @@ jobs:
 
           echo "pulumi version $PULUMI_VERSION"
           bash ./.github/scripts/update-versions.sh "${PULUMI_VERSION}"
-          echo "Script later"
 
           ERROR=false
           if [ -n "$(git status --porcelain)" ]; then
@@ -104,7 +103,6 @@ jobs:
             git diff
             echo "::endgroup::"
           fi
-          echo "after porcelain erro ris $ERROR"
 
           if EXISTING_RELEASE_DRAFT="$(gh release view "v${PULUMI_VERSION}" --json isDraft --jq '.isDraft')"; then
             if [ "$EXISTING_RELEASE_DRAFT" != "true" ]; then
