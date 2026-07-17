@@ -2,8 +2,10 @@
 
 set -euo pipefail
 
->&2 echo "::group::Update versions"
-trap ">&2 echo '::endgroup::'" EXIT # bash equivalent of defer func()
+echo "::group::Update versions"
+#>&2 echo "::group::Update versions"
+#trap ">&2 echo '::endgroup::'" EXIT # bash equivalent of defer func()
+echo "after trap"
 
 INPUT_VERSION="$1"
 BUILD="$(cut -d'+' -f2 <<< "$INPUT_VERSION")" # may not be present
@@ -16,23 +18,23 @@ MAJOR="$(cut -d'.' -f1 <<< "$VERSION")"
 MINOR="$(cut -d'.' -f2 <<< "$VERSION")"
 PATCH="$(cut -d'.' -f3 <<< "$VERSION")"
 
->&2 echo "::debug::INPUT_VERSION=$INPUT_VERSION"
->&2 echo "::debug::VERSION=$VERSION"
->&2 echo "::debug::PRERELEASE=$PRERELEASE"
->&2 echo "::debug::MAJOR=$MAJOR"
->&2 echo "::debug::MAJOR=$MINOR"
->&2 echo "::debug::MINOR=$PATCH"
->&2 echo "::debug::BUILD=$BUILD"
+echo "::debug::INPUT_VERSION=$INPUT_VERSION"
+echo "::debug::VERSION=$VERSION"
+echo "::debug::PRERELEASE=$PRERELEASE"
+echo "::debug::MAJOR=$MAJOR"
+echo "::debug::MAJOR=$MINOR"
+echo "::debug::MINOR=$PATCH"
+echo "::debug::BUILD=$BUILD"
 
 PIPX_MISSING=false
 if ! command -v pipx &>/dev/null; then
-  >&2 echo "::error::pipx not installed, install pipx via pypi or homebrew"
+  echo "::error::pipx not installed, install pipx via pypi or homebrew"
   PIPX_MISSING=true
 fi
 
 JQ_MISSING=false
 if ! command -v jq &>/dev/null; then
-  >&2 echo "::error::yq not installed, install jq via your OS package manager"
+  echo "::error::yq not installed, install jq via your OS package manager"
   JQ_MISSING=true
 fi
 
@@ -64,7 +66,7 @@ for n in $(seq 0 1 "$((N-1))"); do
         "json") TOOL="jq" TOOL_ARGS="--in-place";;
         "yaml") TOOL="yq" TOOL_ARGS="--in-place";;
         *)
-          >&2 echo "::error::Unknown file format $fileFormat; unable to update file $file"
+          echo "::error::Unknown file format $fileFormat; unable to update file $file"
           exit 1
       esac
 
@@ -93,7 +95,7 @@ for n in $(seq 0 1 "$((N-1))"); do
         versionString=$(envsubst '$SEMVER,$VERSION,$MAJOR,$MINOR,$PATCH,$PRERELEASE,$BUILD' <<< "$versionFormat")
 
         if [ "$TOOL" == "sed" ]; then
-          sed --in-place -E "s/$updatePath/$versionString/" "$file"
+          sed -i -E "s/$updatePath/$versionString/" "$file"
         else
           tool $TOOL_ARGS "$updatePath = \"$versionString\"" "$file"
         fi
@@ -104,8 +106,10 @@ for n in $(seq 0 1 "$((N-1))"); do
       eval "${command}"
     ;;
     *)
-      >&2 echo "::error::Unknown replacement type $type"
+      echo "::error::Unknown replacement type $type"
       exit 1
     ;;
   esac
 done
+
+echo "It' s complete"
