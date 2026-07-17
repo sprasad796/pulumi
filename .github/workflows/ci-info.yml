@@ -93,7 +93,7 @@ jobs:
           PULUMI_VERSION="${{ steps.version.outputs.version }}"
 
           echo "pulumi version $PULUMI_VERSION"
-          bash ./.github/scripts/update-versions "${PULUMI_VERSION}"
+          bash ./.github/scripts/update-versions.sh "${PULUMI_VERSION}"
           echo "Script later"
 
           ERROR=false
