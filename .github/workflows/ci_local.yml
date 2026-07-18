@@ -160,13 +160,16 @@ jobs:
           echo "::group::Set outputs"
           # Pipe matrix values via stdin: they can exceed the 128 KiB per-argument limit
           # (MAX_ARG_STRLEN), which would otherwise fail the exec with "Argument list too long".
-          echo "$BUILD_TARGETS" | ./.github/scripts/set-output build-targets
+          OUTPUT_TARGET=$(echo "$BUILD_TARGETS" | ./.github/scripts/set-output.sh build-targets)
+          echo "output target $OUTPUT_TARGET"
+          echo $OUTPUT_TARGET >> "${GITHUB_OUTPUT}"
+
           #ESCAPED=$(echo "$BUILD_TARGETS" | jq -R ".")
           #OUTPUT_NAME="build-targets"
           #echo "${OUTPUT_NAME}=${ESCAPED}" >> "${GITHUB_OUTPUT}"
           #echo "build-targets="[{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}]"" >> "${GITHUB_OUTPUT}"
 
-          #./.github/scripts/set-output build-targets "$BUILD_TARGETS"
+          #./.github/scripts/set-output.sh build-targets "$BUILD_TARGETS"
           #echo "build-targets="["{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}"]"" >> $GITHUB_OUTPUT
           #echo "build-targets="[{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}]"" >> $GITHUB_OUTPUT
           #echo "build-targets="[{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}]"" >> "${GITHUB_OUTPUT}"
