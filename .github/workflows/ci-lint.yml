@@ -31,7 +31,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
+          # go-version: ${{ inputs.version-set }}
           check-latest: true
           # golangci-lint-action handles all the caching for Go.
           cache: false
@@ -61,7 +61,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
+          go-version: ${{ inputs.version-set }}
           check-latest: true
       - name: Run go mod tidy
         run: make tidy
@@ -76,7 +76,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
+          go-version: ${{ inputs.version-set }}
           check-latest: true
       - name: Run make gen
         run: cd sdk/go && make gen
@@ -115,7 +115,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
+          go-version: ${{ inputs.version-set }}
           check-latest: true
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -170,7 +170,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
+          go-version: ${{ inputs.version-set }}
           check-latest: true
       - run: |
           make lint_actions
@@ -187,7 +187,7 @@ jobs:
         with:
           action: actions/setup-go@v6
           with: |
-            go-version: ${{ fromJson(inputs.version-set).go }}
+            go-version: ${{ inputs.version-set }}
             check-latest: true
           attempt_limit: 3
           attempt_delay: 5000
@@ -208,7 +208,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
+          go-version: ${{ inputs.version-set }}
           check-latest: true
       - name: Set up Node ${{ fromJson(inputs.version-set).nodejs }}
         uses: actions/setup-node@v6

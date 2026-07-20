@@ -89,7 +89,7 @@ jobs:
     strategy:
       fail-fast: true
     outputs:
-      build-targetss: "${{ steps.matrx.outputs.build-targets }}"
+      build-targetss: "${{ fromJSON(steps.matrx.outputs.build-targets) }}"
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
@@ -171,17 +171,6 @@ jobs:
           # (MAX_ARG_STRLEN), which would otherwise fail the exec with "Argument list too long".
           OUTPUT_TARGET=$(echo "$BUILD_TARGETS" | ./.github/scripts/set-output.sh build-targets)
           echo "output target "$OUTPUT_TARGET""
-          #echo "$OUTPUT_TARGET" >> "${GITHUB_OUTPUT}"
-
-          #ESCAPED=$(echo "$BUILD_TARGETS" | jq -R ".")
-          #OUTPUT_NAME="build-targets"
-          #echo "${OUTPUT_NAME}=${ESCAPED}" >> "${GITHUB_OUTPUT}"
-          #echo "build-targets="[{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}]"" >> "${GITHUB_OUTPUT}"
-
-          #./.github/scripts/set-output.sh build-targets "$BUILD_TARGETS"
-          #echo "build-targets="["{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}"]"" >> $GITHUB_OUTPUT
-          #echo "build-targets="[{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}]"" >> $GITHUB_OUTPUT
-          #echo "build-targets="[{\"os\":\"linux\", \"arch\":\"amd64\", \"build-platform\":\"ubuntu-latest\"}]"" >> "${GITHUB_OUTPUT}"
 
   lint:
     name: Lint
