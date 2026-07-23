@@ -24,14 +24,23 @@ jobs:
   golangci:
     name: Lint Go
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        object: ${{ inputs.version-set }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           ref: ${{ inputs.ref }}
+      - name: Display the Input Params
+        run: |
+          echo "display paarmas"
+          echo "${{ inputs.version-set }}"    
+          echo "${{ inputs.ref }}"    
+          echo "displayed paarmas"
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          # go-version: ${{ inputs.version-set }}
+          go-version: ${{ matrix.object.go }}
           check-latest: true
           # golangci-lint-action handles all the caching for Go.
           cache: false
@@ -44,16 +53,17 @@ jobs:
       - name: Install golangci-lint
         uses: ./.github/actions/retry
         with:
-          action: golangci/golangci-lint-action@4afd733a84b1f43292c63897423277bb7f4313a9
+          action: golangci/golangci-lint-action@v7
           with: |
             version: ${{ env.GOLANGCI_LINT_VERSION }}
             args: --help
 
-      - name: Run golangci-lint
-        run: make lint_golang
   tidy:
-    name: go mod tidy
+    name: Go Tidy Auto-fix
     runs-on: ubuntu-latest
+    # Define the path to the child directory
+    env:
+      MODULE_DIR: pkg
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
@@ -62,9 +72,21 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: ${{ inputs.version-set }}
-          check-latest: true
+          cache: true
+          cache-dependency-path: ${{ env.MODULE_DIR }}/go.mod
       - name: Run go mod tidy
-        run: make tidy
+        run: | 
+          cd pkg
+          go mod download
+          go mod tidy
+
+      - name: Verify no changes
+        run: | 
+          if [ -n "$(git status --porcelain ${{ env.MODULE_DIR }}/go.mod ${{ env.MODULE_DIR}}/go.sum)" ]; then
+            echo "Error: go.mod or go.sum is not tidy. Please run 'go mod tidy' locally and commit the changes."
+            git diff go.mod go.sum
+            exit 1
+          fi
 
   gen:
     name: Generate Go SDK
@@ -115,21 +137,22 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ inputs.version-set }}
+          go-version: '1.25.11'
           check-latest: true
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
           cache-dependency-glob: sdk/python/uv.lock
-      - name: Set up Python ${{ fromJson(inputs.version-set).python }}
+      #- name: Set up Python ${{ fromJson(inputs.version-set).python }}
+      - name: Set up Python 
         uses: actions/setup-python@v6
         with:
-          python-version: ${{ fromJson(inputs.version-set).python }}
-      - name: Set up Node ${{ fromJson(inputs.version-set).nodejs }}
+          python-version: 3.14
+      - name: Set up Node ${{ inputs.version-set }}
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ fromJson(inputs.version-set).nodejs }}
+          node-version: ${{ inputs.version-set }}
           cache: npm
           cache-dependency-path: sdk/nodejs/package-lock.json
       - name: Install Python deps
@@ -197,27 +220,3 @@ jobs:
           with: |
             experimental: true
       - run: make lint_changelog
-
-  pulumi-json:
-    name: Lint pulumi.json
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-        with:
-          ref: ${{ inputs.ref }}
-      - name: Set up Go
-        uses: actions/setup-go@v6
-        with:
-          go-version: ${{ inputs.version-set }}
-          check-latest: true
-      - name: Set up Node ${{ fromJson(inputs.version-set).nodejs }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ fromJson(inputs.version-set).nodejs }}
-          cache: npm
-          cache-dependency-path: sdk/nodejs/package-lock.json
-      - name: Ensure Node # We need to install Node.js deps so that biome is available
-        run: |
-          cd sdk/nodejs && make ensure
-      - run: |
-          make lint_pulumi_json

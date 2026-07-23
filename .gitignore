@@ -107,3 +107,8 @@ yarn-error.log
 
 # Local mise.toml
 .mise.local.toml
+
+# Act Runner — secrets locais
+.secrets
+.env.local
+.env.production

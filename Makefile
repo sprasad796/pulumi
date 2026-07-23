@@ -10,7 +10,7 @@ PROJECT         := github.com/pulumi/pulumi/pkg/v3/cmd/pulumi
 # to avoid issues like realpath failing on macOS if the directory doesn't exist.
 _ := $(shell mkdir -p bin)
 
-_ := $(shell cd pkg && go build -o ../bin/helpmakego github.com/iwahbe/helpmakego)
+_ := $(shell cd pkg && go build -o ..bin/helpmakego github.com/iwahbe/helpmakego)
 
 PKG_CODEGEN := github.com/pulumi/pulumi/pkg/v3/codegen
 # nodejs and python codegen tests are much slower than go:
