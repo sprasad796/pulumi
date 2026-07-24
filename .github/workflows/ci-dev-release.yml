@@ -80,7 +80,7 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::Set outputs"
-          ./scripts/set-output version-set "${VERSION_SET}"
+          ./.github/scripts/set-output.sh version-set "${VERSION_SET}"
           echo "::endgroup::"
     outputs:
       version-set: "${{ steps.matrix.outputs.version-set }}"
@@ -178,10 +178,10 @@ jobs:
               mv -vT "$file" "../../artifacts/sdk-nodejs-${file}"
             done
           )
-      - name: Set up Node ${{ fromJson(needs.matrix.outputs.version-set).nodejs }}
+      - name: Set up Node ${{ needs.matrix.outputs.version-set.nodejs }}
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ fromJson(needs.matrix.outputs.version-set).nodejs }}
+          node-version: ${{ needs.matrix.outputs.version-set.nodejs }}
           registry-url: https://registry.npmjs.org
           always-auth: true
         env:
@@ -205,10 +205,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Set up Python ${{ fromJson(needs.matrix.outputs.version-set).python }}
+      - name: Set up Python ${{ needs.matrix.outputs.version-set.python }}
         uses: actions/setup-python@v6
         with:
-          python-version: ${{ fromJson(needs.matrix.outputs.version-set).python }}
+          python-version: ${{ needs.matrix.outputs.version-set.python }}
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
