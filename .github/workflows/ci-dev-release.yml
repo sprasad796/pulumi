@@ -65,8 +65,6 @@ jobs:
           action: jdx/mise-action@v2
           with: |
             experimental: true
-      - name: Install CLI
-        run: SDKS='' make install
       - name: build matrix
         id: matrix
         run: |
@@ -82,10 +80,10 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::Set outputs"
-          ./.github/scripts/set-output version-set "${VERSION_SET}"
+          ./scripts/set-output version-set "${VERSION_SET}"
           echo "::endgroup::"
     outputs:
-      version-set: "${{ fromJson(steps.matrix.outputs.version-set) }}"
+      version-set: "${{ steps.matrix.outputs.version-set }}"
 
   build-release:
     name: build-release

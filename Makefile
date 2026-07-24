@@ -53,7 +53,8 @@ build-proto: build_proto
 build_proto: .make/proto
 .make/proto: $(PROTO_SOURCES)
 	cd proto && ./generate.sh
-	@mkdir -p .make && touch $@
+	bash $(CURRENT_DIR)/proto/generate.sh
+	@mkdir -p .make && touch .make/proto
 
 .PHONY: check-proto check_proto
 check-proto: check_proto

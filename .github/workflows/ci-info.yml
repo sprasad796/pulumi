@@ -60,7 +60,7 @@ jobs:
             PULUMI_VERSION="${PULUMI_VERSION%-*}-alpha.$TIMESTAMP"
           fi
 
-          ./.github/scripts/set-output version "${PULUMI_VERSION}"
+          ./.github/scripts/set-output.sh version "${PULUMI_VERSION}"
       - uses: miniscruff/changie-action@v2
         with:
           version: v1.21.0
@@ -68,7 +68,7 @@ jobs:
         id: notes
         run: |
           CHANGELOG="$(changie batch "${{ steps.version.outputs.version }}" --dry-run)"
-          ./.github/scripts/set-output release-notes "${CHANGELOG}"
+          ./.github/scripts/set-output.sh release-notes "${CHANGELOG}"
       - name: Check version
         if: ${{ !inputs.is-snapshot }}
         run: |

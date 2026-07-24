@@ -21,5 +21,6 @@ set -euo pipefail
 OUTPUT_NAME="$1"
 VALUE="$2"
 
-ESCAPED="$(echo -n "${VALUE}" | jq -Rsc ".")" # JSON encode
+#ESCAPED="$(echo -n "${VALUE}" | jq -Rsc ".")" # JSON encode
+ESCAPED="$(echo -n "${VALUE}")" # JSON encode
 echo "${OUTPUT_NAME}=${ESCAPED}" >> "${GITHUB_OUTPUT}"
