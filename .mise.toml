@@ -14,6 +14,7 @@ node = "20"
 "npm:yarn" = "latest"
 bun = "latest"
 python = '3.11'
+protoc = "35.1"
 uv = "0.10.0"
 # This is a dev only dependency that fails to install on windows
 "go:github.com/mitranim/gow" = { version = "latest", os = ["linux", "macos"] }
@@ -29,3 +30,4 @@ dotnet = "8"
 java = "temurin-11"
 gradle = "7.6"
 "github:pulumi/goteststats" = "0.0.7"
+protobuf = "latest"
