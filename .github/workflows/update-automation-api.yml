@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
-          token: ${{ secrets.PULUMI_BOT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./.github/actions/retry
         with:
           action: jdx/mise-action@v2
@@ -31,7 +31,7 @@ jobs:
       - name: Create or update PR
         id: pr
         env:
-          GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git add -A
@@ -61,7 +61,7 @@ jobs:
         uses: slackapi/slack-github-action@v2
         with:
           method: chat.postMessage
-          token: ${{ secrets.RELEASE_BOT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           payload: |
             channel: "#team-iac-core"
             text: "The `pulumi` automation APIs have drifted from the CLI; a regeneration PR is ready for review: ${{ steps.pr.outputs.url }}"
