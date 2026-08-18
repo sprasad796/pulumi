@@ -2,6 +2,7 @@ name: Update Automation APIs
 
 permissions:
   contents: read
+  id-token: write
 
 on:
   push:
