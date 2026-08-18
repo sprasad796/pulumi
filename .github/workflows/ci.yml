@@ -9,7 +9,7 @@ on:
     inputs:
       ref:
         required: true
-        description: "GitHub ref to use"
+        description: "GitHub ref to test"
         type: string
       version:
         required: true
