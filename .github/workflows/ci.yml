@@ -2,6 +2,7 @@ name: CI
 
 permissions:
   contents: read
+  contents: write
   id-token: write
 
 on:
@@ -77,6 +78,9 @@ on:
       GCP_SERVICE_ACCOUNT:
         required: false
         description: "GCP service account, required to run tests against GCP"
+      GITHUB_TOKEN:
+        required: true
+        description: "github token ID for git repositories"
 
 jobs:
   # Computes the cheap outputs every other job fans out from. This job must stay fast: the
@@ -89,6 +93,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           ref: ${{ inputs.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Compute version set and build targets
         id: setup
         run: |
@@ -111,8 +116,8 @@ jobs:
           ]'
           printf '%s' "${BUILD_TARGETS}" | ./.github/scripts/set-output build-targets
     outputs:
-      version-set: "${{ fromJson(steps.setup.outputs.version-set) }}"
-      build-targets: "${{ fromJson(steps.setup.outputs.build-targets) }}"
+      version-set: "${{ steps.setup.outputs.version-set }}"
+      build-targets: "${{ (steps.setup.outputs.build-targets) }}"
 
   matrix:
     runs-on: ubuntu-latest

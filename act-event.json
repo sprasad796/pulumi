@@ -1,0 +1,9 @@
+{
+  "inputs": {
+    "ref": "sdk-macos-unittest",
+    "arch": "arm64",
+    "build-platform": "ubuntu-latest",
+    "os": "darwin",
+    "secrets,PULUMI_PROD_ACCESS_TOKEN": "dummy_token"
+  }
+}

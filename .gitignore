@@ -20,7 +20,9 @@ venv/
 /pulumi.sln
 .mono
 # Ignore VSCode created cache files (https://github.com/microsoft/vscode-dotnettools/issues/2952)
-*.lscache
+*.lscach
+# secrets file for github
+.secrets
 
 # Ignore user-provided go.work files.
 /go.work
