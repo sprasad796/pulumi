@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "ref": "on-push-yml",
+    "version": "3.260.0-dev.0",
+    "os": "Darwin",
+    "arch": "arm64",
+    "version-set": {
+       "name": "current", 
+       "dotnet": "9", 
+       "go": "1.27.x", 
+       "nodejs": "26.x", 
+       "python": "3.14.x"
+    }
+  }
+}

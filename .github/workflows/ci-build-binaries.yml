@@ -82,11 +82,11 @@ jobs:
           ref: ${{ inputs.ref }}
       - name: Configure Go Cache Key
         env:
-          CACHE_KEY: "${{ fromJson(inputs.version-set).go }}-${{ runner.os }}-${{ runner.arch }}-target-${{ inputs.os }}-${{ inputs.arch }}-cov-${{ inputs.enable-coverage && inputs.os == 'linux' }}-race-${{ inputs.enable-race-detection }}"
+          CACHE_KEY: "${{ inputs.version-set.go }}-${{ runner.os }}-${{ runner.arch }}-target-${{ inputs.os }}-${{ inputs.arch }}-cov-${{ inputs.enable-coverage && inputs.os == 'linux' }}-race-${{ inputs.enable-race-detection }}"
         run: echo "$CACHE_KEY" > .gocache.tmp
       - uses: actions/setup-go@v6
         with:
-          go-version: ${{ fromJson(inputs.version-set).go }}
+          go-version: ${{ inputs.version-set.go }}
           check-latest: true
           cache: true
           cache-dependency-path: |
@@ -127,7 +127,7 @@ jobs:
           # shellcheck disable=SC2002
           cat .goreleaser.yml \
             | go run github.com/t0yv0/goreleaser-filter@v0.3.0 -goos ${{ inputs.os }} -goarch ${{ inputs.arch }} \
-            | goreleaser release -f - -p 5 --skip=validate --clean --snapshot
+            | goreleaser release -f - -p 5 --skip=publish --clean --snapshot
       - uses: ./.github/actions/retry
         if: ${{ inputs.os != 'js' }}
         with:

@@ -29,7 +29,13 @@ jobs:
 
       - name: Git describe
         id: ghd
-        uses: proudust/gh-describe@v1
+        uses: proudust/gh-describe@v2
+        with:
+           token: ${{ secrets.GITHUB_TOKEN }}
+           repo:  ${{ github.repository }}
+           match: "v*.*.*"
+           exclude: "*-alpha,*-beta"
+           default: "v1.0.0" # Use this tag if no tag is found, instead of failing
       - name: strip prefix
         id: strip-prefix
         # Always prefix the short_sha with a letter to ensure it's a valid semver prerelease,
@@ -82,7 +88,7 @@ jobs:
           ./.github/scripts/set-output version-set "${VERSION_SET}"
           echo "::endgroup::"
     outputs:
-      version-set: "${{ fromJson(steps.matrix.outputs.version-set) }}"
+      version-set: "${{ steps.matrix.outputs.version-set }}"
 
   build-release:
     name: build-release
@@ -177,10 +183,10 @@ jobs:
               mv -vT "$file" "../../artifacts/sdk-nodejs-${file}"
             done
           )
-      - name: Set up Node ${{ fromJson(needs.matrix.outputs.version-set).nodejs }}
+      - name: Set up Node ${{ needs.matrix.outputs.version-set.nodejs }}
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ fromJson(needs.matrix.outputs.version-set).nodejs }}
+          node-version: ${{ needs.matrix.outputs.version-set.nodejs }}
           registry-url: https://registry.npmjs.org
           always-auth: true
         env:

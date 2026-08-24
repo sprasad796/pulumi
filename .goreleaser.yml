@@ -8,11 +8,12 @@ builds:
   id: pulumi
   binary: pulumi
   dir: pkg
+  no_main_check: true
   main: ./cmd/pulumi
-  tool: ../scripts/go-wrapper.sh
+  tool: ../scripts/Do-wrapper.sh
   env:
   - GO111MODULE=on
-  goos: ['linux', 'darwin', 'windows']
+  goos: ['linux', 'Darwin', 'windows']
   goarch: ['amd64', 'arm64']
   goamd64: ['v1']
   flags:
