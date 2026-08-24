@@ -10,10 +10,10 @@ builds:
   dir: pkg
   no_main_check: true
   main: ./cmd/pulumi
-  tool: ../scripts/Do-wrapper.sh
+  tool: ../scripts/go-wrapper.sh
   env:
   - GO111MODULE=on
-  goos: ['linux', 'Darwin', 'windows']
+  goos: ['linux', 'darwin', 'windows']
   goarch: ['amd64', 'arm64']
   goamd64: ['v1']
   flags:
