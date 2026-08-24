@@ -34,8 +34,8 @@ jobs:
     permissions:
       contents: read
     outputs:
-      version: "${{ fromJSON(steps.version.outputs.version) }}"
-      release-notes: "${{ fromJSON(steps.notes.outputs.release-notes) }}"
+      version: "${{ steps.version.outputs.version }}"
+      release-notes: "${{ steps.notes.outputs.release-notes }}"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
