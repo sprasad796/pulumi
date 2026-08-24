@@ -2,7 +2,6 @@ name: CI
 
 permissions:
   contents: read
-  contents: write
   id-token: write
 
 on:
@@ -42,9 +41,9 @@ on:
         required: false
         type: boolean
       fail-fast:
-        required: false
-        default: false
         description: "Fail all workflows whenever one of them fails"
+        default: false
+        required: false
         type: boolean
       test-retries:
         required: false
@@ -117,16 +116,17 @@ jobs:
           printf '%s' "${BUILD_TARGETS}" | ./.github/scripts/set-output build-targets
     outputs:
       version-set: "${{ steps.setup.outputs.version-set }}"
-      build-targets: "${{ (steps.setup.outputs.build-targets) }}"
+      build-targets: "${{ steps.setup.outputs.build-targets }}"
 
   matrix:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: ${{ inputs.fail-fast }}
+    env:
+      FAIL-FAST: ${{ inputs.fail-fast }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           ref: ${{ inputs.ref }}
+          fail-fast: ${{ env.FAIL_FAST }}
       - name: Configure Go Cache Key
         env:
           CACHE_KEY: "matrix-setup"
@@ -136,6 +136,7 @@ jobs:
         with:
           go-version: '>=1.19.0' # decoupled from version sets, only used by gotestsum
           cache: true
+          fail-fast: ${{ env.FAIL_FAST }}
           cache-dependency-path: |
             pkg/go.sum
             .gocache.tmp
@@ -146,6 +147,7 @@ jobs:
             repository: dnephin/gotestsum
             ref: d09768c81065b404caed0855eb3ab8f11a2a4431
             path: vendor/gotestsum
+            fail-fast: ${{ env.FAIL_FAST }}
       - run: |
           cd vendor/gotestsum
           go install .
@@ -154,6 +156,7 @@ jobs:
           path: test-results
           key: read-gotestsum-timing-${{ github.run_number }}
           restore-keys: gotestsum-timing-
+          fail-fast: ${{ env.FAIL_FAST }}
       - name: build matrix
         id: matrix
         env:
@@ -305,21 +308,20 @@ jobs:
     needs: [setup]
     if: ${{ inputs.lint }}
     uses: ./.github/workflows/ci-lint.yml
-    strategy:
-      fail-fast: ${{ inputs.fail-fast }}
     with:
       ref: ${{ inputs.ref }}
       version-set: ${{ needs.setup.outputs.version-set }}
+      fail-fast: ${{ inputs.fail-fast }}
 
   build-binaries:
     name: build binaries
     needs: [setup]
     strategy:
-      fail-fast: ${{ inputs.fail-fast }}
       matrix:
-        target: ${{ fromJson(needs.setup.outputs.build-targets) }}
+        target: ${{ needs.setup.outputs.build-targets }}
     uses: ./.github/workflows/ci-build-binaries.yml
     with:
+      fail-fast: ${{ inputs.fail-fast }}
       ref: ${{ inputs.ref }}
       version: ${{ inputs.version }}
       os: ${{ matrix.target.os }}

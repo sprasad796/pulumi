@@ -26,9 +26,11 @@
 set -euo pipefail
 
 OUTPUT_NAME="$1"
+VALUE="$2"
 
 if [ "$#" -ge 2 ]; then
-  ESCAPED="$(printf '%s' "$2" | jq -Rsc ".")" # JSON encode the argument
+  #ESCAPED="$(printf '%s' "$2" | jq -Rsc ".")" # JSON encode the argument
+  ESCAPED="$(echo -n "${VALUE}") # JSON encode the argument
 else
   ESCAPED="$(jq -Rsc ".")" # JSON encode stdin
 fi
