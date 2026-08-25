@@ -2,8 +2,9 @@
   "inputs": {
     "ref": "on-push-yml",
     "version": "3.260.0-dev.0",
-    "os": "Darwin",
-    "arch": "arm64",
+    "os": "darwin",
+    "arch": "amd64",
+    "enable-race-detection": "false",
     "version-set": {
        "name": "current", 
        "dotnet": "9", 

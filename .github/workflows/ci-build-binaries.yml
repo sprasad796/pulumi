@@ -106,10 +106,10 @@ jobs:
           GOOS: ${{ inputs.os }}
           GOARCH: ${{ inputs.arch }}
         run: ./scripts/prep-for-goreleaser.sh local
-      - name: Show files and permissions
+      - name: Show files and permissions for not macOS
         if: ${{ runner.os != 'macOS'}}
         run: find bin -type f -printf "%M    %p/"\\n
-      - name: Show files and permissions
+      - name: Show files and permissions for macOS
         if: ${{ runner.os == 'macOS'}}
         run: |
           brew install findutils
@@ -122,7 +122,7 @@ jobs:
           PULUMI_BUILD_MODE: ${{ inputs.enable-coverage && inputs.os == 'linux' && 'coverage' || 'normal' }}
           PULUMI_ENABLE_RACE_DETECTION: ${{ inputs.enable-race-detection && 'true' || 'false' }}
         run: |
-          set -euxo pipefail
+          #set -euxo pipefail
           # Spurious, this command requires piping via stdin
           # shellcheck disable=SC2002
           cat .goreleaser.yml \
