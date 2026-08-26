@@ -1,7 +1,8 @@
 name: Update Automation APIs
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 on:
   push:
@@ -20,7 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
-          token: ${{ secrets.PULUMI_BOT_TOKEN }}
+          token: ${{ secrets.PULUMI_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          ref: 70929355a6d7d7e9cf5d5aabd26cc96a780e634f
       - uses: ./.github/actions/retry
         with:
           action: jdx/mise-action@v2
@@ -31,7 +33,7 @@ jobs:
       - name: Create or update PR
         id: pr
         env:
-          GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+          PULUMI_BOT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           branch=automation/update-automation-api
@@ -65,6 +67,8 @@ jobs:
             --body "The CLI specification no longer matches the generated automation APIs. This PR regenerates them from ${GITHUB_SHA}.")
           echo "url=${pr_url}" >> "$GITHUB_OUTPUT"
       - name: Notify Slack
+        env:
+          RELEASE_BOT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: steps.pr.outputs.url != ''
         uses: slackapi/slack-github-action@v2
         with:
