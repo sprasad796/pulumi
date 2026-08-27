@@ -54,6 +54,7 @@ jobs:
         uses: proudust/gh-describe@v1
         env:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+        continue-on-error: true
       - name: Dispatch event to docs repo
         env:
           GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
