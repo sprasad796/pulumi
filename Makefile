@@ -284,7 +284,7 @@ test_performance:
 # Used by CI to run tests in parallel across the Go modules pkg, sdk, and tests.
 .PHONY: gotestsum/%
 gotestsum/%:
-	cd $* && $(PYTHON) '$(CURDIR)/scripts/go-test.py' $(GO_TEST_FLAGS) $${OPTS} $${PKGS}
+	cd $* && go mod tidy && $(PYTHON) '$(CURDIR)/scripts/go-test.py' $(GO_TEST_FLAGS) $${OPTS} $${PKGS}
 
 tidy::
 	./scripts/tidy.sh --check
