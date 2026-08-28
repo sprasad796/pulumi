@@ -2,9 +2,9 @@ name: Direct build
 
 on:
   #workflow_call
-  #schedule:
+  schedule:
   # 1030 UTC every weekday
-  - cron: "35 15 * * 1-5"
+  - cron: "37 15 * * 1-5"
 
 jobs:
   pkg:
