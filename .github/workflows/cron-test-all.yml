@@ -61,8 +61,6 @@ jobs:
       # data on every merge to main, so getting it in the daily cro
       # job is not important.
       enable-coverage: false
-      env:
-        PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
     secrets: inherit
 
   performance-gate:
