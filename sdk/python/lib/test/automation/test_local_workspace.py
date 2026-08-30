@@ -220,6 +220,11 @@ class TestLocalWorkspace(unittest.TestCase):
         # Restore the original default.
         ws.org_set_default(original)
 
+    @pytest.mark.skipif(
+        "PULUMI_ACCESS_TOKEN" not in os.environ,
+        reason="the local backend does not support organizations",
+    )
+
     def test_stack_init(self):
         project_name = "python_test"
         project_settings = ProjectSettings(name=project_name, runtime="python")
@@ -248,6 +253,11 @@ class TestLocalWorkspace(unittest.TestCase):
 
         # This will throw if the renamed stack doesn't exist.
         ws.remove_stack(stack_name + "_renamed")
+
+    @pytest.mark.skipif(
+        "PULUMI_ACCESS_TOKEN" not in os.environ,
+        reason="the local backend does not support organizations",
+    )
 
     def test_config_env_functions(self):
         if get_test_org() != "moolumi":
