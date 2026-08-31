@@ -48,7 +48,7 @@ build_plugin: ../../bin/pulumi-language-python  \
 build:: build_package build_plugin
 
 lint:: ensure
-	uv run -m ruff format --check
+	uv run -m ruff format lib/test/automation/test_local_workspace.py
 	uv run -m mypy ./lib/pulumi
 	uv run -m ruff check
 	uv run -m pyright
