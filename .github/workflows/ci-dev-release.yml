@@ -29,7 +29,8 @@ jobs:
 
       - name: Git describe
         id: ghd
-        uses: proudust/gh-describe@v1
+        run: |
+           git rev-parse --short HEAD
       - name: strip prefix
         id: strip-prefix
         # Always prefix the short_sha with a letter to ensure it's a valid semver prerelease,
