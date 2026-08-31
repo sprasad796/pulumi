@@ -125,7 +125,7 @@ publish:: ensure
 		basename=$$(basename $${file}); \
 		mv -vT "$${file}" "../../artifacts/$${basename##sdk-python-}"; \
 	done
-	uv run twine upload \
+	uv publish \
 	-u "${PYPI_USERNAME}" -p "${PYPI_PASSWORD}" \
 		../../artifacts/*.whl \
 		--skip-existing \
