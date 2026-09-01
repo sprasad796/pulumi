@@ -29,10 +29,7 @@ export function getTestOrg() {
     if (process.env.PULUMI_TEST_ORG) {
         return process.env.PULUMI_TEST_ORG;
     }
-    if (process.env.PULUMI_ACCESS_TOKEN) {
-        return "pulumi-test";
-    }
-    return "organization";
+    return ""
 }
 
 /**

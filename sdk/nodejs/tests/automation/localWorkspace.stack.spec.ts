@@ -338,7 +338,7 @@ describe("LocalWorkspace - Stack", () => {
         const suffix = `int_test${getTestSuffix()}`;
 
         const stackName = fullyQualifiedStackName(getTestOrg(), "inline_node", suffix);
-        let shortName = getTestOrg() + "/" + suffix;
+        let shortName = getTestOrg() + suffix;
         if (!process.env.PULUMI_ACCESS_TOKEN) {
             // If we are running with a filestate backend, there's no prefix in the name
             shortName = suffix;
