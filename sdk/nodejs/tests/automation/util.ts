@@ -29,7 +29,7 @@ export function getTestOrg() {
     if (process.env.PULUMI_TEST_ORG) {
         return process.env.PULUMI_TEST_ORG;
     }
-    return ""
+    return "";
 }
 
 /**
