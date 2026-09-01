@@ -26,9 +26,9 @@ export function getTestSuffix() {
 
 /** @internal */
 export function getTestOrg() {
-    if (process.env.PULUMI_TEST_ORG) {
+    /*if (process.env.PULUMI_TEST_ORG) {
         return process.env.PULUMI_TEST_ORG;
-    }
+    }*/
     return "";
 }
 
