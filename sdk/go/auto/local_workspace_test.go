@@ -57,7 +57,7 @@ var pulumiOrg = getTestOrg()
 const (
 	pName         = "testproj"
 	agent         = "pulumi/pulumi/test"
-	pulumiTestOrg = "moolumi"
+	pulumiTestOrg = "organization"
 )
 
 type mockPulumiCommand struct {
