@@ -42,11 +42,12 @@ def stack_cleanup(stack: Stack, destroy: bool = True):
 
 
 def get_test_org():
-    test_org="Organization"
+    test_org="organization"
 
-    env_var = os.getenv("PULUMI_TEST_ORG")
-    if env_var is not None:
-        return env_var
+    # Python backend local test is configured for Organization
+    #env_var = os.getenv("PULUMI_TEST_ORG")
+    #if env_var is not None:
+    #    return env_var
 
     return test_org
 
