@@ -42,12 +42,12 @@ def stack_cleanup(stack: Stack, destroy: bool = True):
 
 
 def get_test_org():
-    test_org="organization"
-
-    # Python backend local test is configured for Organization
-    #env_var = os.getenv("PULUMI_TEST_ORG")
-    #if env_var is not None:
-    #    return env_var
+    test_org = "organization"
+    env_var = os.getenv("PULUMI_TEST_ORG")
+    if env_var is not None:
+        return env_var
+    if os.getenv("PULUMI_ACCESS_TOKEN") is None:
+        return "organization"
 
     return test_org
 
@@ -57,6 +57,16 @@ def get_test_suffix() -> str:
 
 
 def stack_namer(project_name: str) -> str:
+    """Generate a stack name, with or without organization prefix."""
+    """suffix = get_test_suffix()
+    org = get_test_org()
+    
+    # Only include org prefix if using cloud backend (PULUMI_ACCESS_TOKEN is set)
+    if os.getenv("PULUMI_ACCESS_TOKEN"):
+        return f"{org}/{project_name}/{suffix}"
+    else:
+        return f"{project_name}/{suffix}"  # Local backend doesn't support org
+    """
     return fully_qualified_stack_name(
         get_test_org(), project_name, f"int_test_{get_test_suffix()}"
     )

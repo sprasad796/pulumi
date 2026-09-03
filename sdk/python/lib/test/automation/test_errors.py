@@ -75,11 +75,6 @@ def test_runtime_errors(lang: str, error: str):
     finally:
         stack.workspace.remove_stack(stack_name, force=True)
 
-@pytest.mark.skipif(
-    "PULUMI_ACCESS_TOKEN" not in os.environ,
-    reason="the local backend does not support organizations",
-)
-
 @pytest.mark.parametrize(
     "lang,error",
     [
