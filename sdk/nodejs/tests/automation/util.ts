@@ -26,7 +26,7 @@ export function getTestSuffix() {
 
 /** @internal */
 export function getTestOrg() {
-    test_org="organization";
+    const test_org = "organization";
     if (process.env.PULUMI_TEST_ORG) {
         return process.env.PULUMI_TEST_ORG;
     }
