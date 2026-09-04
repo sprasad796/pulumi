@@ -30,6 +30,11 @@ export function getTestOrg() {
     if (process.env.PULUMI_TEST_ORG) {
         return process.env.PULUMI_TEST_ORG;
     }
+    // Use "moolumi" as the default when using cloud backend
+    if (process.env.PULUMI_ACCESS_TOKEN) {
+        return "moolumi";
+    }
+    // Use "organization" for local file backend
     return test_org;
 }
 
