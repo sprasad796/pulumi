@@ -53,6 +53,8 @@ def get_test_org():
         env_var = os.getenv("PULUMI_TEST_ORG")
         if env_var is not None:
             return env_var
+        else:
+            return "organization"
 
     return test_org
 
