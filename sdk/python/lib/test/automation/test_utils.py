@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import subprocess
 import uuid
 from contextlib import contextmanager
 
@@ -42,12 +43,15 @@ def stack_cleanup(stack: Stack, destroy: bool = True):
 
 
 def get_test_org():
-    test_org = "organization"
-    env_var = os.getenv("PULUMI_TEST_ORG")
-    if env_var is not None:
-        return env_var
-    if os.getenv("PULUMI_ACCESS_TOKEN") is None:
-        return "organization"
+    result = subprocess.run(["pulumi", "whoami"], capture_output=True, text=True)
+    test_org = result.stdout.strip()
+
+    if test_org is None:
+       env_var = os.getenv("PULUMI_TEST_ORG")
+       if env_var is not None:
+          return env_var
+       if os.getenv("PULUMI_ACCESS_TOKEN") is None:
+          return "organization"
 
     return test_org
 
