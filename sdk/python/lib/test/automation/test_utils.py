@@ -43,18 +43,20 @@ def stack_cleanup(stack: Stack, destroy: bool = True):
 
 
 def get_test_org():
+    env_var = os.getenv("PULUMI_TEST_ORG")
+    if env_var is not None:
+        print("env var ", env_var)
+        return env_var
     if os.getenv("PULUMI_ACCESS_TOKEN") is None:
+        print("env token is none")
         return "organization"
 
     result = subprocess.run(["pulumi", "whoami"], capture_output=True, text=True)
     test_org = result.stdout.strip()
 
+    print(" Test org is ", test_org)
     if test_org is None:
-        env_var = os.getenv("PULUMI_TEST_ORG")
-        if env_var is not None:
-            return env_var
-        else:
-            return "organization"
+        test_org = "moolumi"
 
     return test_org
 
