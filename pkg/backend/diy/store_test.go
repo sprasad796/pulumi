@@ -167,11 +167,6 @@ func TestProjectReferenceStore_ParseReference_errors(t *testing.T) {
 			wantErr: "must not be empty",
 		},
 		{
-			desc:    "bad organization",
-			give:    "foo/bar/baz",
-			wantErr: "organization name must be 'organization'",
-		},
-		{
 			desc:    "long project name",
 			give:    "organization/" + strings.Repeat("a", 101) + "/foo",
 			wantErr: "project names are limited to 100 characters",

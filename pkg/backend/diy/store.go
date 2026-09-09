@@ -169,10 +169,11 @@ func (p *projectReferenceStore) ParseReference(stackRef string) (*diyBackendRefe
 		org = "organization"
 	}
 
-    // org-name could be anything and default to organization
-	/*if org != "organization" {
-		return nil, errors.New("organization name must be 'organization'")
-	}*/
+	// org-name could be anything and default to organization
+	if org != "organization" {
+		//return nil, errors.New("organization name must be 'organization'")
+		fmt.Println("org name in diy backend is defaulted to organization")
+	}
 
 	if project == "" {
 		currentProject := p.currentProject()
