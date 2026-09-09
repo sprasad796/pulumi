@@ -59,9 +59,6 @@ on:
       PULUMI_PROD_ACCESS_TOKEN:
         required: false
         description: "Pulumi access token, required to run tests against the service"
-      PULUMI_ACCESS_TOKEN:
-        required: false
-        description: "Pulumi access token, required for integration tests"
       CODECOV_TOKEN:
         required: false
         description: "CodeCov token, required to publish CodeCov coverage data"
@@ -80,9 +77,6 @@ on:
       GCP_SERVICE_ACCOUNT:
         required: false
         description: "GCP service account, required to run tests against GCP"
-
-env:
-  PULUMI_ACCESS_TOKEN: env-token
 
 jobs:
   # Computes the cheap outputs every other job fans out from. This job must stay fast: the
