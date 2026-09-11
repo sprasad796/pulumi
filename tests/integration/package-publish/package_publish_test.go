@@ -32,7 +32,7 @@ func TestPackagePublishLifecycle(t *testing.T) {
     "name": "`+name+`",
     "version": "1.2.3"
 }`)
-	org := os.Getenv("PULUMI_TEST_ORG")
+        t.Setenv("PULUMI_TEST_ORG", "organization")
 	require.NotEmpty(t, org, "Missing PULUMI_TEST_ORG")
 	e.WriteTestFile("README.md", "# test-publish\n")
 	e.RunCommand("pulumi", "package", "publish", "./schema.json", "--readme", "./README.md", "--publisher", org)
