@@ -16,11 +16,9 @@ package ints
 
 import (
 	"math/rand/v2"
-	"os"
 	"testing"
 
 	ptesting "github.com/pulumi/pulumi/sdk/v3/go/common/testing"
-	"github.com/stretchr/testify/require"
 )
 
 func TestPackagePublishLifecycle(t *testing.T) {
@@ -32,8 +30,7 @@ func TestPackagePublishLifecycle(t *testing.T) {
     "name": "`+name+`",
     "version": "1.2.3"
 }`)
-        t.Setenv("PULUMI_TEST_ORG", "organization")
-	require.NotEmpty(t, org, "Missing PULUMI_TEST_ORG")
+	org := "organization"
 	e.WriteTestFile("README.md", "# test-publish\n")
 	e.RunCommand("pulumi", "package", "publish", "./schema.json", "--readme", "./README.md", "--publisher", org)
 	e.RunCommand("pulumi", "package", "delete", "--yes", // non-interactive mode requires --yes flag
