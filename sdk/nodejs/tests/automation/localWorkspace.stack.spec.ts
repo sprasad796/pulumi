@@ -29,7 +29,7 @@ describe("LocalWorkspace - Stack", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         await ws.createStack(stackName);
         await ws.selectStack(stackName);
         await ws.removeStack(stackName);
@@ -42,7 +42,7 @@ describe("LocalWorkspace - Stack", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
         await withStack(
             stack,
@@ -54,10 +54,10 @@ describe("LocalWorkspace - Stack", () => {
         );
     });
 
-    describe("Tag methods: get/set/remove/list", () => {
+    describe("Tag methods: get/set/remove/list", async () => {
         const projectName = "testProjectName";
         const runtime = "nodejs";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const projectSettings: ProjectSettings = {
             name: projectName,
             runtime,
@@ -230,7 +230,7 @@ describe("LocalWorkspace - Stack", () => {
 
     it(`Environment functions`, async function () {
         // Skipping test because the required environments are in the moolumi org.
-        if (getTestOrg() !== "moolumi") {
+        if ((await getTestOrg()) !== "moolumi") {
             this.skip();
             return;
         }
@@ -240,7 +240,7 @@ describe("LocalWorkspace - Stack", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
         await withStack(
             stack,
@@ -289,7 +289,7 @@ describe("LocalWorkspace - Stack", () => {
         const stackNamer = () => `int_test${getTestSuffix()}`;
         const stackNames: string[] = [];
         for (let i = 0; i < 2; i++) {
-            const stackName = fullyQualifiedStackName(getTestOrg(), projectName, stackNamer());
+            const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, stackNamer());
             stackNames[i] = stackName;
             await Stack.create(stackName, ws);
             const stackSummary = await ws.stack();
@@ -310,7 +310,7 @@ describe("LocalWorkspace - Stack", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
         await withStack(
             stack,
@@ -335,14 +335,11 @@ describe("LocalWorkspace - Stack", () => {
             return {};
         };
 
+        const pulumi_whoami_org: string = await await getTestOrg();
         const suffix = `int_test${getTestSuffix()}`;
 
-        const stackName = fullyQualifiedStackName(getTestOrg(), "inline_node", suffix);
-        let shortName = getTestOrg() + suffix;
-        if (!process.env.PULUMI_ACCESS_TOKEN) {
-            // If we are running with a filestate backend, there's no prefix in the name
-            shortName = suffix;
-        }
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "inline_node", suffix);
+        const shortName = suffix;
 
         const stackRenamed = stackName + "_renamed";
         const shortRenamed = shortName + "_renamed";
@@ -365,7 +362,7 @@ describe("LocalWorkspace - Stack", () => {
 
         const after = (await stack.workspace.listStacks()).find((x) => x.name.startsWith(shortName));
 
-        assert.strictEqual(returned, `Renamed ${shortName} to ${shortRenamed}\n`);
+        assert.strictEqual(returned.trim(), `Renamed ${shortName} to ${shortRenamed}`);
         assert.strictEqual(after?.name, shortRenamed);
 
         if (process.env.PULUMI_ACCESS_TOKEN) {
@@ -392,8 +389,9 @@ describe("LocalWorkspace - Stack", () => {
             };
         };
         const projectName = "inline_node";
+        const testOrg = await getTestOrg();
         const stackNames = Array.from(Array(10).keys()).map((_) =>
-            fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`),
+            fullyQualifiedStackName(testOrg, projectName, `int_test${getTestSuffix()}`),
         );
         const stacks = await Promise.all(
             stackNames.map(async (stackName) =>
@@ -413,7 +411,7 @@ describe("LocalWorkspace - Stack", () => {
             };
         };
         const projectName = "import_export_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "import_export_node"),

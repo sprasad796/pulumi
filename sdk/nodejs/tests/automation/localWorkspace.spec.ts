@@ -102,7 +102,7 @@ describe("LocalWorkspace", () => {
     });
     // TODO[pulumi/pulumi#8220] understand why this test was flaky
     xit(`runs through the stack lifecycle with a local program`, async () => {
-        const stackName = fullyQualifiedStackName(getTestOrg(), "testproj", `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "testproj", `int_test${getTestSuffix()}`);
         const workDir = upath.joinSafe(__dirname, "data", "testproj");
         const stack = await LocalWorkspace.createStack({ stackName, workDir }, withTestBackend({}));
         await withStack(stack, async () => {
@@ -141,7 +141,7 @@ describe("LocalWorkspace", () => {
     });
     it(`previews a refresh without executing it`, async () => {
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             {
                 stackName,
@@ -170,7 +170,7 @@ describe("LocalWorkspace", () => {
     });
     it(`previews a refresh with resources without executing it`, async () => {
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             {
                 stackName,
@@ -204,7 +204,7 @@ describe("LocalWorkspace", () => {
         });
     });
     it(`previews a destroy without executing it`, async () => {
-        const stackName = fullyQualifiedStackName(getTestOrg(), "testproj_dotnet", `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "testproj_dotnet", `int_test${getTestSuffix()}`);
         const workDir = upath.joinSafe(__dirname, "data", "testproj_dotnet");
         const stack = await LocalWorkspace.createStack(
             { stackName, workDir },
@@ -238,7 +238,7 @@ describe("LocalWorkspace", () => {
             return {};
         };
 
-        const stackName = fullyQualifiedStackName(getTestOrg(), "inline_node", `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "inline_node", `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName: "inline_node", program },
             withTestBackend({}, "inline_node"),
@@ -261,7 +261,7 @@ describe("LocalWorkspace", () => {
         });
     });
     it(`runs through the stack lifecycle with a local dotnet program`, async () => {
-        const stackName = fullyQualifiedStackName(getTestOrg(), "testproj_dotnet", `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "testproj_dotnet", `int_test${getTestSuffix()}`);
         const workDir = upath.joinSafe(__dirname, "data", "testproj_dotnet");
         const stack = await LocalWorkspace.createStack(
             { stackName, workDir },
@@ -301,7 +301,7 @@ describe("LocalWorkspace", () => {
             };
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -350,7 +350,7 @@ describe("LocalWorkspace", () => {
             };
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -399,7 +399,7 @@ describe("LocalWorkspace", () => {
     });
     it(`listens for error output`, async () => {
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             {
                 stackName,
@@ -504,7 +504,7 @@ describe("LocalWorkspace", () => {
             return {};
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -534,7 +534,7 @@ describe("LocalWorkspace", () => {
             return {};
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -566,7 +566,7 @@ describe("LocalWorkspace", () => {
             });
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `auto_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `auto_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -585,7 +585,7 @@ describe("LocalWorkspace", () => {
             };
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -616,7 +616,7 @@ describe("LocalWorkspace", () => {
             };
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `configfile_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `configfile_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -649,7 +649,7 @@ describe("LocalWorkspace", () => {
             return {};
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -682,9 +682,10 @@ describe("LocalWorkspace", () => {
                 exp_secret: config.getSecret("buzz"),
             };
         };
+        const testOrg = await getTestOrg();
         const projectName = "inline_node";
         const stackNames = Array.from(Array(30).keys()).map((_) =>
-            fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`),
+            fullyQualifiedStackName(testOrg, projectName, `int_test${getTestSuffix()}`),
         );
 
         const testStackLifetime = async (stackName: string) => {
@@ -741,7 +742,7 @@ describe("LocalWorkspace", () => {
             };
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -804,7 +805,7 @@ describe("LocalWorkspace", () => {
             };
         };
         const projectName = "import_export_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "import_export_node"),
@@ -849,7 +850,7 @@ describe("LocalWorkspace", () => {
     it(`runs an inline program that exits gracefully`, async () => {
         const program = async () => ({});
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -870,7 +871,7 @@ describe("LocalWorkspace", () => {
             return {};
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -894,7 +895,7 @@ describe("LocalWorkspace", () => {
             return {};
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -916,7 +917,7 @@ describe("LocalWorkspace", () => {
 
     it("can import resources into a stack using resource definitions", async () => {
         const workDir = upath.joinSafe(__dirname, "data", "import");
-        const stackName = fullyQualifiedStackName(getTestOrg(), "node_test", `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "node_test", `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack({ workDir, stackName }, withTestBackend({}));
         const pulumiRandomVersion = "4.16.3";
         await stack.workspace.installPlugin("random", pulumiRandomVersion);
@@ -954,7 +955,7 @@ describe("LocalWorkspace", () => {
 
     it("can import resources into a stack without generating code", async () => {
         const workDir = upath.joinSafe(__dirname, "data", "import");
-        const stackName = fullyQualifiedStackName(getTestOrg(), "node_test", `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "node_test", `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack({ workDir, stackName }, withTestBackend({}));
         const pulumiRandomVersion = "4.16.3";
         await stack.workspace.installPlugin("random", pulumiRandomVersion);
@@ -1021,7 +1022,7 @@ describe("LocalWorkspace", () => {
     });
     it(`respects existing project settings`, async () => {
         const projectName = "correct_project";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             {
                 stackName,
@@ -1057,7 +1058,7 @@ describe("LocalWorkspace", () => {
             return {};
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -1107,7 +1108,7 @@ describe("LocalWorkspace", () => {
         };
 
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),

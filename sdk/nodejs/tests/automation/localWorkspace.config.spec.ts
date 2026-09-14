@@ -35,7 +35,7 @@ describe("LocalWorkspace - Config", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
 
         const config = {
@@ -79,7 +79,7 @@ describe("LocalWorkspace - Config", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
         await stack.setConfig("key", { value: "-value" });
         await stack.setConfig("secret-key", { value: "-value", secret: true });
@@ -107,7 +107,7 @@ describe("LocalWorkspace - Config", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
 
         // test backward compatibility
@@ -194,7 +194,7 @@ describe("LocalWorkspace - Config", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
 
         // Set config using JSON format
@@ -233,7 +233,7 @@ describe("LocalWorkspace - Config", () => {
     // the context of a stack and org, and running this test in different orgs will fail if there are secrets.
     it(`nested_config`, async () => {
         const sName = `int_test${getTestSuffix()}`;
-        const stackName = fullyQualifiedStackName(getTestOrg(), "nested_config", sName);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), "nested_config", sName);
         const workDir = upath.joinSafe(__dirname, "data", "nested_config");
 
         // Copy Pulumi.dev.yaml to a stack-specific config file so we use a unique stack name
@@ -316,7 +316,7 @@ describe("LocalWorkspace - Config", () => {
             config.requireSecretObject("obj4");
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),

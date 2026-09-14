@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { exec } from "child_process";
 import { randomUUID } from "crypto";
 import * as fs from "fs";
 import * as os from "os";
@@ -25,17 +26,48 @@ export function getTestSuffix() {
 }
 
 /** @internal */
-export function getTestOrg() {
-    const test_org = "organization";
+export async function getTestOrg() {
+    // Use "organization" for local file backend
+    let test_org = "organization";
+
     if (process.env.PULUMI_TEST_ORG) {
         return process.env.PULUMI_TEST_ORG;
     }
-    // Use "moolumi" as the default when using cloud backend
+
+    if (!process.env.PULUMI_ACCESS_TOKEN) {
+        return test_org;
+    }
+
+    const pulumi_whoami_org = await getUserName();
+
+    if (pulumi_whoami_org) {
+        return pulumi_whoami_org;
+    }
+
     if (process.env.PULUMI_ACCESS_TOKEN) {
-        return "moolumi";
+        test_org = "moolumi";
     }
     // Use "organization" for local file backend
     return test_org;
+}
+
+export async function getUserName(): Promise<string> {
+    let str = "";
+    return new Promise((resolve, reject) => {
+        exec("pulumi whoami", (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Execution error: ${error.message}`);
+                return str;
+            }
+            if (stderr) {
+                console.error(`Shell error output: ${stderr}`);
+                return str;
+            }
+            str = stdout.trim();
+            return resolve(stdout.trim());
+        });
+    });
+    return str;
 }
 
 /**

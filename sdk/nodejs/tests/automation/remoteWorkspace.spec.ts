@@ -408,7 +408,7 @@ function testErrors(fn: (args: RemoteGitProgramArgs, opts?: RemoteWorkspaceOptio
 }
 
 async function testLifecycle(fn: (args: RemoteGitProgramArgs, opts?: RemoteWorkspaceOptions) => Promise<RemoteStack>) {
-    const stackName = fullyQualifiedStackName(getTestOrg(), "go_remote_proj", `int_test${getTestSuffix()}`);
+    const stackName = fullyQualifiedStackName(await getTestOrg(), "go_remote_proj", `int_test${getTestSuffix()}`);
     const stack = await fn(
         {
             stackName,
