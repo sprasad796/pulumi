@@ -119,6 +119,12 @@ jobs:
         shell: bash
         run: |
           winget install pulumi --disable-interactivity --accept-source-agreements --accept-package-agreements --verbose
+      - name: Upgrade Pulumi CLI
+        shell: pwsh
+        run: |
+          winget upgrade --id Pulumi.Pulumi --accept-package-agreements --accept-source-agreements
+          if ($LASTEXITCODE -eq 43) { exit 0 }
+          exit $LASTEXITCODE
       - run: echo "C:/Program Files (x86)/Pulumi" >> "${GITHUB_PATH}"
         shell: bash
       - name: Pulumi Version Details
