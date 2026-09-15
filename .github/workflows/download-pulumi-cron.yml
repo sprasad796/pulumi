@@ -131,7 +131,7 @@ jobs:
         if: ${{ steps.vars.outputs.expected-version != steps.vars.outputs.installed-version }}
         run: |
           echo "Expected version ${{ steps.vars.outputs.expected-version }} but found ${{ steps.vars.outputs.installed-version }}"
-          winget upgrade -all --accept-source-agreements --accept-package-agreements --silent
+          winget install pulumi --disable-interactivity --accept-source-agreements --accept-package-agreements --verbose
   windows-direct-install:
     name: Install Pulumi via script on Windows
     runs-on: windows-latest
