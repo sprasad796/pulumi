@@ -131,12 +131,6 @@ jobs:
         if: ${{ steps.vars.outputs.expected-version != steps.vars.outputs.installed-version }}
         run: |
           echo "Expected version ${{ steps.vars.outputs.expected-version }} but found ${{ steps.vars.outputs.installed-version }}"
-      - name: Upgrade Pulumi CLI
-        shell: pwsh
-        run: |
-          winget upgrade --id Pulumi.Pulumi --accept-package-agreements --accept-source-agreements
-          if ($LASTEXITCODE -eq 43) { exit 0 }
-          exit $LASTEXITCODE
   windows-direct-install:
     name: Install Pulumi via script on Windows
     runs-on: windows-latest
