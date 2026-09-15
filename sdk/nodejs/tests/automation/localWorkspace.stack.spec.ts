@@ -335,7 +335,7 @@ describe("LocalWorkspace - Stack", () => {
             return {};
         };
 
-        const pulumi_whoami_org: string = await await getTestOrg();
+        const pulumi_whoami_org: string = await getTestOrg();
         const suffix = `int_test${getTestSuffix()}`;
 
         const stackName = fullyQualifiedStackName(await getTestOrg(), "inline_node", suffix);
