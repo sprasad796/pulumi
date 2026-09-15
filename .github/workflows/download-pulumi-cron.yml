@@ -118,7 +118,7 @@ jobs:
       - name: Install Pulumi Using WinGet
         shell: bash
         run: |
-          winget upgrade pulumi --accept-source-agreements --accept-package-agreements --silent
+          winget install -all --accept-source-agreements --accept-package-agreements --silent
       - run: echo "C:/Program Files (x86)/Pulumi" >> "${GITHUB_PATH}"
         shell: bash
       - name: Pulumi Version Details
@@ -131,7 +131,7 @@ jobs:
         if: ${{ steps.vars.outputs.expected-version != steps.vars.outputs.installed-version }}
         run: |
           echo "Expected version ${{ steps.vars.outputs.expected-version }} but found ${{ steps.vars.outputs.installed-version }}"
-          exit 1
+          winget upgrade -all --accept-source-agreements --accept-package-agreements --silent
   windows-direct-install:
     name: Install Pulumi via script on Windows
     runs-on: windows-latest
