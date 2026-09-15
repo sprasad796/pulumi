@@ -116,7 +116,10 @@ jobs:
             rm -v "$PULUMI_INSTALL_DIR"/pulumi*
           fi
       - name: Install Pulumi Using WinGet
-        run: winget install pulumi --disable-interactivity --accept-source-agreements --verbose
+        shell: bash
+        run: |
+          winget install pulumi --disable-interactivity --accept-source-agreements --verbose
+          winget upgrade pulumi
       - run: echo "C:/Program Files (x86)/Pulumi" >> "${GITHUB_PATH}"
         shell: bash
       - name: Pulumi Version Details
