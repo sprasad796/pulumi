@@ -108,7 +108,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Remove Pre-installed Pulumi
-        shell: bash
+        shell: pwsh
         run: |
           if command -v "pulumi.exe"; then
             PULUMI_INSTALL_DIR=$(dirname "$(command -v "pulumi.exe")")
@@ -116,7 +116,7 @@ jobs:
             rm -v "$PULUMI_INSTALL_DIR"/pulumi*
           fi
       - name: Install Pulumi Using WinGet
-        shell: bash
+        shell: pwsh
         run: |
           winget install pulumi --disable-interactivity --accept-source-agreements --accept-package-agreements --verbose
       - name: Upgrade Pulumi CLI
@@ -126,10 +126,10 @@ jobs:
           if ($LASTEXITCODE -eq 43) { exit 0 }
           exit $LASTEXITCODE
       - run: echo "C:/Program Files (x86)/Pulumi" >> "${GITHUB_PATH}"
-        shell: bash
+        shell: pwsh
       - name: Pulumi Version Details
         id: vars
-        shell: bash
+        shell: pwsh
         run: |
           echo "installed-version=$(pulumi version)" >> "${GITHUB_OUTPUT}"
           echo "expected-version=v$(curl -sS https://www.pulumi.com/latest-version)" >> "${GITHUB_OUTPUT}"
@@ -137,7 +137,6 @@ jobs:
         if: ${{ steps.vars.outputs.expected-version != steps.vars.outputs.installed-version }}
         run: |
           echo "Expected version ${{ steps.vars.outputs.expected-version }} but found ${{ steps.vars.outputs.installed-version }}"
-          winget install pulumi --disable-interactivity --accept-source-agreements --accept-package-agreements --verbose
   windows-direct-install:
     name: Install Pulumi via script on Windows
     runs-on: windows-latest
