@@ -268,7 +268,7 @@ func TestNewStackLocalSource(t *testing.T) {
 	pDir := filepath.Join(".", "test", "testproj")
 	s, err := NewStackLocalSource(ctx, stackName, pDir)
 	if err != nil {
-		t.Errorf("failed to initialize stack, err: %v", err)
+		t.Errorf("failed to initialize stack, err: %v \n %v\n", err, stackName)
 		t.FailNow()
 	}
 
@@ -3864,16 +3864,13 @@ func getTestOrg() string {
 
 	if _, set := os.LookupEnv("PULUMI_TEST_ORG"); set {
 		testOrg = os.Getenv("PULUMI_TEST_ORG")
-	}
-
-	if _, set := os.LookupEnv("PULUMI_ACCESS_TOKEN"); !set {
 		return testOrg
 	}
 
 	cmd := exec.Command("pulumi", "whoami")
 	out, err := cmd.Output()
-	if err != nil {
-		return string(out)
+	if err == nil {
+		return strings.TrimSpace(string(out))
 	}
 
 	if _, set := os.LookupEnv("PULUMI_ACCESS_TOKEN"); set {
