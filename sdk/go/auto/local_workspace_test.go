@@ -3861,9 +3861,25 @@ func BenchmarkBulkSetConfigSecret(b *testing.B) {
 
 func getTestOrg() string {
 	testOrg := pulumiTestOrg
+
 	if _, set := os.LookupEnv("PULUMI_TEST_ORG"); set {
 		testOrg = os.Getenv("PULUMI_TEST_ORG")
 	}
+
+	if _, set := os.LookupEnv("PULUMI_ACCESS_TOKEN"); !set {
+		return testOrg
+	}
+
+	cmd := exec.Command("pulumi", "whoami")
+	out, err := cmd.Output()
+	if err != nil {
+		return string(out)
+	}
+
+	if _, set := os.LookupEnv("PULUMI_ACCESS_TOKEN"); set {
+		testOrg = "moolumi"
+	}
+
 	return testOrg
 }
 

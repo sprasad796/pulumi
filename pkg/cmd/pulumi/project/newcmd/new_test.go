@@ -1156,7 +1156,7 @@ Available Templates:
   aws-visualbasic                    A minimal AWS VB.NET Pulumi program
   aws-yaml                           A minimal AWS Pulumi YAML program
 `)
-	//assert.Equal(t, "", stderr.String())
+	assert.Equal(t, "", stderr.String())
 }
 
 // TestPulumiNewWithoutPulumiAccessToken checks that we won't error if we run `pulumi new

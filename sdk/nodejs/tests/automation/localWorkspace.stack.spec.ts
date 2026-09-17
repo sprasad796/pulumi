@@ -32,7 +32,7 @@ describe("LocalWorkspace - Stack", () => {
         const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
         await ws.createStack(stackName);
         await ws.selectStack(stackName);
-        await ws.removeStack(stackName);
+        await ws?.removeStack(stackName);
     });
 
     it(`create/select/createOrSelect Stack`, async () => {
@@ -111,7 +111,7 @@ describe("LocalWorkspace - Stack", () => {
         });
 
         afterEach(async () => {
-            await workspace.removeStack(stackName);
+            await workspace?.removeStack(stackName);
         });
     });
 
@@ -299,7 +299,7 @@ describe("LocalWorkspace - Stack", () => {
         }
 
         for (const name of stackNames) {
-            await ws.removeStack(name);
+            await ws?.removeStack(name);
         }
     });
 
@@ -376,7 +376,7 @@ describe("LocalWorkspace - Stack", () => {
         assert.strictEqual(destroyRes.summary.kind, "destroy");
         assert.strictEqual(destroyRes.summary.result, "succeeded");
 
-        await stack.workspace.removeStack(stackRenamed);
+        await stack.workspace?.removeStack(stackRenamed);
     });
 
     it(`successfully initializes multiple stacks`, async () => {

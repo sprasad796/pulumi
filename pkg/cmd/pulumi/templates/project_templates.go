@@ -309,10 +309,10 @@ func IsGitRepoTemplateURL(templateNamePathOrURL string) bool {
 	return strings.HasPrefix(url, "https://") || strings.HasPrefix(url, "ssh://")
 }
 
-// isTemplateFileOrDirectory returns true if templateNamePathOrURL is the name of a valid file or directory.
-func isTemplateFileOrDirectory(templateNamePathOrURL string) bool {
+// isTemplateFileOrDirectoryExist returns true if templateNamePathOrURL is the name of a valid file or directory.
+func isTemplateFileOrDirectoryExist(templateNamePathOrURL string) (bool, error) {
 	_, err := os.Stat(templateNamePathOrURL)
-	return err == nil
+	return err == nil, err
 }
 
 // RetrieveTemplates retrieves a "template repository" based on the specified name, path, or URL.
@@ -325,9 +325,13 @@ func RetrieveTemplates(ctx context.Context, templateNamePathOrURL string, offlin
 	if IsGitRepoTemplateURL(templateNamePathOrURL) {
 		return retrieveURLTemplates(ctx, templateNamePathOrURL, offline)
 	}
-	if isTemplateFileOrDirectory(templateNamePathOrURL) {
+	isExist, err := isTemplateFileOrDirectoryExist(templateNamePathOrURL)
+	if err != nil && !errors.Is(err, fs.ErrNotExist) {
+		return TemplateRepository{}, fmt.Errorf("template '%s' not found", templateNamePathOrURL)
+	} else if isExist {
 		return retrieveFileTemplates(templateNamePathOrURL)
 	}
+
 
 	// We now assume that templateNamePathOrURL is a template name that points to the
 	// global templates set.
