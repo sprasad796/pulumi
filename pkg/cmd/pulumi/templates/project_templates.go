@@ -332,7 +332,6 @@ func RetrieveTemplates(ctx context.Context, templateNamePathOrURL string, offlin
 		return retrieveFileTemplates(templateNamePathOrURL)
 	}
 
-
 	// We now assume that templateNamePathOrURL is a template name that points to the
 	// global templates set.
 
