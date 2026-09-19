@@ -2309,9 +2309,6 @@ func TestNestedConfig(t *testing.T) {
 }
 
 func TestEnvFunctions(t *testing.T) {
-	if getTestOrg() != pulumiTestOrg {
-		t.Skip("Skipping test because the required environments are in the moolumi org.")
-	}
 	t.Parallel()
 
 	ctx := t.Context()

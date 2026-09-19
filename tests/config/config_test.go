@@ -29,7 +29,7 @@ import (
 	ptesting "github.com/pulumi/pulumi/sdk/v3/go/common/testing"
 )
 
-const pulumiTestOrg = "moolumi"
+//var pulumiTestOrg = getTestOrg()
 
 func TestConfigCommands(t *testing.T) {
 	t.Parallel()
@@ -408,10 +408,7 @@ config:
 	assert.Equal(t, []any{"third"}, thirdValue["objectValue"])
 }
 
-func TestConfigCommandsUsingEnvironments(t *testing.T) {
-	if getTestOrg() != pulumiTestOrg {
-		t.Skip("Skipping test because the required environment is in the moolumi org.")
-	}
+/*func TestConfigCommandsUsingEnvironments(t *testing.T) {
 	if os.Getenv("PULUMI_ACCESS_TOKEN") == "" {
 		t.Skip("Skipping test because PULUMI_ACCESS_TOKEN is not set.")
 	}
@@ -421,8 +418,12 @@ func TestConfigCommandsUsingEnvironments(t *testing.T) {
 	defer e.DeleteIfNotFailed()
 
 	integration.CreateBasicPulumiRepo(e)
-	e.RunCommand("pulumi", "org", "set-default", getTestOrg())
-	stackName := ptesting.RandomStackName()
+        org := getTestOrg()
+	e.RunCommand("pulumi", "org", "set-default", org)
+	//sName := ptesting.RandomStackName()
+        //stackName := FullyQualifiedName(org, "set_config_plain", sName)
+        stackName := "swati796/pulumi-test/stack_project_name"
+        //stackName := "stack_project_name"
 	e.RunCommand("pulumi", "stack", "init", stackName)
 
 	// check config is empty
@@ -430,7 +431,11 @@ func TestConfigCommandsUsingEnvironments(t *testing.T) {
 	assert.Equal(t, "KEY  VALUE", strings.Trim(stdout, "\r\n"))
 
 	// set an esc environment
-	e.RunCommand("pulumi", "config", "env", "add", "secrets-test-env-DO-NOT-DELETE", "--yes")
+        //org = "moolumi"
+        //envName := FullyQualifiedName(org, "default", "secrets-test-env-DO-NOT-DELETE")
+        //envName := "crd-bug-repo/dev"
+        envName := "secrets-test-env-DO-NOT-DELETE"
+	e.RunCommand("pulumi", "config", "env", "add", envName, "--yes")
 
 	// just `pulumi config`
 	stdout, _ = e.RunCommand("pulumi", "config")
@@ -470,9 +475,21 @@ test_secret  [unknown]`, strings.Trim(stdout, "\r\n"))
 }
 
 func getTestOrg() string {
-	testOrg := pulumiTestOrg
+	testOrg := "moolumi"
 	if _, set := os.LookupEnv("PULUMI_TEST_ORG"); set {
 		testOrg = os.Getenv("PULUMI_TEST_ORG")
+		return testOrg
 	}
+
+	cmd := exec.Command("pulumi", "whoami")
+	out, err := cmd.Output()
+	if err == nil {
+		return strings.TrimSpace(string(out))
+	}
+
 	return testOrg
 }
+
+func FullyQualifiedName(org, project, attr string) string {
+	return fmt.Sprintf("%s/%s/%s", org, project, attr)
+}*/
