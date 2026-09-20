@@ -16,9 +16,9 @@ package ints
 
 import (
 	"math/rand/v2"
-        "os"
-        "os/exec"
-        "strings"
+	"os"
+	"os/exec"
+	"strings"
 	"testing"
 
 	ptesting "github.com/pulumi/pulumi/sdk/v3/go/common/testing"
@@ -51,17 +51,17 @@ func randomSuffix() string {
 }
 
 func getTestOrg() string {
-        testOrg := "moolumi"
-        if _, set := os.LookupEnv("PULUMI_TEST_ORG"); set {
-                testOrg = os.Getenv("PULUMI_TEST_ORG")
-                return testOrg
-        }
+	testOrg := "moolumi"
+	if _, set := os.LookupEnv("PULUMI_TEST_ORG"); set {
+		testOrg = os.Getenv("PULUMI_TEST_ORG")
+		return testOrg
+	}
 
-        cmd := exec.Command("pulumi", "whoami")
-        out, err := cmd.Output()
-        if err == nil {
-                return strings.TrimSpace(string(out))
-        }       
+	cmd := exec.Command("pulumi", "whoami")
+	out, err := cmd.Output()
+	if err == nil {
+		return strings.TrimSpace(string(out))
+	}
 
-        return testOrg
-}  
+	return testOrg
+}
