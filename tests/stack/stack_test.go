@@ -979,7 +979,11 @@ func TestNewStackConflictingOrg(t *testing.T) {
 
 	e.CWD = projectDir
 
-	orgs := []string{"moolumi", "pulumi-test"}
+	// orgs := []string{"moolumi", "pulumi-test"}
+	// Use the current username as the "organization" in certain operations.
+	username, _ := e.RunCommand("pulumi", "whoami")
+	orgs := []string{strings.TrimSpace(username)}
+
 	for _, org := range orgs {
 		stackRef := fmt.Sprintf("%s/%s/stack", org, project)
 		// Ensure projects no longer exists. Ignoring errors.
