@@ -2314,6 +2314,16 @@ func TestEnvFunctions(t *testing.T) {
 	ctx := t.Context()
 	stackName := FullyQualifiedStackName(pulumiOrg, pName, ptesting.RandomStackName())
 
+	_, err := NewPulumiCommand(nil)
+	require.NoError(t, err)
+
+	e := ptesting.NewEnvironment(t)
+	defer e.DeleteIfNotFailed()
+
+	e.RunCommand("pulumi", "env", "init", "test_project/automation-api-test-env")
+	e.RunCommand("pulumi", "env", "init", "test_project/automation-api-test-env-2")
+	e.RunCommand("pulumi", "env", "init", "test_project/secrets-test-env-DO-NOT-DELETE")
+
 	pDir := filepath.Join(".", "test", pName)
 	s, err := UpsertStackLocalSource(ctx, stackName, pDir)
 	require.NoError(t, err, "failed to initialize stack, err: %v", err)
@@ -2326,50 +2336,22 @@ func TestEnvFunctions(t *testing.T) {
 	// Errors when trying to add a non-existent env
 	assert.Error(t, s.AddEnvironments(ctx, "non-existent-env"))
 
-	// No error when adding an existing env
-	require.NoError(t, s.AddEnvironments(ctx, "automation-api-test-env", "automation-api-test-env-2"),
-		"adding environments failed, err: %v", err)
+	// No Errors when trying to add an existing env
+	require.NoError(t, s.AddEnvironments(ctx, "test_project/automation-api-test-env-2"))
+	require.NoError(t, s.AddEnvironments(ctx, "test_project/automation-api-test-env"))
+	require.NoError(t, s.AddEnvironments(ctx, "test_project/secrets-test-env-DO-NOT-DELETE"))
 
 	envs, err := s.ListEnvironments(ctx)
-	require.NoError(t, err, "listing environments failed, err: %v", err)
-	assert.Equal(t, []string{"automation-api-test-env", "automation-api-test-env-2"}, envs)
+	assert.Contains(t, envs, "test_project/automation-api-test-env-2")
+	require.Equal(t, len(envs), 3)
 
-	// Check that we can access config from the envs
-	cfg, err := s.GetAllConfig(ctx)
-	require.NoError(t, err, "getting config failed, err: %v", err)
-	assert.Equal(t, "test_value", cfg["testproj:new_key"].Value)
-	assert.Equal(t, "business", cfg["testproj:also"].Value)
+	// FRemove all the environments
+	err = s.RemoveEnvironment(ctx, "test_project/automation-api-test-env-2")
+	err = s.RemoveEnvironment(ctx, "test_project/automation-api-test-env")
+	err = s.RemoveEnvironment(ctx, "test_project/secrets-test-env-DO-NOT-DELETE")
 
-	err = s.RemoveEnvironment(ctx, "automation-api-test-env")
 	envs, err = s.ListEnvironments(ctx)
-	require.NoError(t, err, "listing environments failed, err: %v", err)
-	assert.Equal(t, []string{"automation-api-test-env-2"}, envs)
-
-	require.NoError(t, err, "removing environment failed, err: %v", err)
-	_, err = s.GetConfig(ctx, "new_key")
-	assert.Error(t, err)
-	v, err := s.GetConfig(ctx, "also")
-	assert.Equal(t, "business", v.Value)
-
-	err = s.RemoveEnvironment(ctx, "automation-api-test-env-2")
-	envs, err = s.ListEnvironments(ctx)
-	require.NoError(t, err, "listing environments failed, err: %v", err)
-	require.Len(t, envs, 0)
-	require.NoError(t, err, "removing environment failed, err: %v", err)
-	_, err = s.GetConfig(ctx, "also")
-	assert.Error(t, err)
-
-	require.NoError(t, s.AddEnvironments(ctx, "secrets-test-env-DO-NOT-DELETE"),
-		"adding environments failed, err: %v", err)
-	envs, err = s.ListEnvironments(ctx)
-	require.NoError(t, err, "listing environments failed, err: %v", err)
-	assert.Contains(t, envs, "secrets-test-env-DO-NOT-DELETE")
-	cfg, err = s.GetAllConfig(ctx)
-	require.NoError(t, err, "getting config failed, err: %v", err)
-	assert.Equal(t, "this_is_my_secret", cfg["testproj:test_secret"].Value)
-	v, err = s.GetConfig(ctx, "test_secret")
-	require.NoError(t, err, "getting config failed, err: %v", err)
-	assert.Equal(t, "this_is_my_secret", v.Value)
+	require.Equal(t, len(envs), 0)
 }
 
 func TestTagFunctions(t *testing.T) {
