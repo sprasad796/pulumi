@@ -2,7 +2,8 @@ name: On Push
 
 permissions:
   # To push the tag
-  contents: write
+  id-token: write
+  contents: read
 
 on:
   push:
@@ -52,9 +53,6 @@ jobs:
       - name: Git describe
         id: ghd
         uses: proudust/gh-describe@v1
-        env:
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-        continue-on-error: true
       - name: Dispatch event to docs repo
         env:
           GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
