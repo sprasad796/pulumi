@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -2320,10 +2321,6 @@ func TestEnvFunctions(t *testing.T) {
 	e := ptesting.NewEnvironment(t)
 	defer e.DeleteIfNotFailed()
 
-	e.RunCommand("pulumi", "env", "init", "test_project/automation-api-test-env")
-	e.RunCommand("pulumi", "env", "init", "test_project/automation-api-test-env-2")
-	e.RunCommand("pulumi", "env", "init", "test_project/secrets-test-env-DO-NOT-DELETE")
-
 	pDir := filepath.Join(".", "test", pName)
 	s, err := UpsertStackLocalSource(ctx, stackName, pDir)
 	require.NoError(t, err, "failed to initialize stack, err: %v", err)
@@ -2333,6 +2330,25 @@ func TestEnvFunctions(t *testing.T) {
 		require.NoError(t, err, "failed to remove stack. Resources have leaked.")
 	}()
 
+	cmd := exec.Command("pulumi", "env", "list")
+	outEnvs, err := cmd.Output()
+	require.NoError(t, err, "failed to get the env list err: %v", err)
+	// Convert bytes to string and trim trailing spaces/newlines
+	outStr := strings.TrimSpace(string(outEnvs))
+
+	// Split the string by newline to get a slice of strings
+	envs := strings.Split(outStr, "\n")
+
+	t.Log(envs)
+	if !slices.Contains(envs, "test_project/automation-api-test-env") {
+		e.RunCommand("pulumi", "env", "init", "test_project/automation-api-test-env")
+	}
+	if !slices.Contains(envs, "test_project/automation-api-test-env-2") {
+		e.RunCommand("pulumi", "env", "init", "test_project/automation-api-test-env-2")
+	}
+	if !slices.Contains(envs, "test_project/secrets-test-env-DO-NOT-DELETE") {
+		e.RunCommand("pulumi", "env", "init", "test_project/secrets-test-env-DO-NOT-DELETE")
+	}
 	// Errors when trying to add a non-existent env
 	assert.Error(t, s.AddEnvironments(ctx, "non-existent-env"))
 
@@ -2341,7 +2357,7 @@ func TestEnvFunctions(t *testing.T) {
 	require.NoError(t, s.AddEnvironments(ctx, "test_project/automation-api-test-env"))
 	require.NoError(t, s.AddEnvironments(ctx, "test_project/secrets-test-env-DO-NOT-DELETE"))
 
-	envs, err := s.ListEnvironments(ctx)
+	envs, err = s.ListEnvironments(ctx)
 	assert.Contains(t, envs, "test_project/automation-api-test-env-2")
 	require.Equal(t, len(envs), 3)
 
