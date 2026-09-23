@@ -2,6 +2,11 @@ module github.com/pulumi/pulumi/tests
 
 go 1.26.6
 
+godebug (
+	http2server=0
+	multipathtcp=0
+)
+
 replace (
 	github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.8.3
 	github.com/atotto/clipboard => github.com/tgummerer/clipboard v0.0.0-20241001131231-d02d263e614e

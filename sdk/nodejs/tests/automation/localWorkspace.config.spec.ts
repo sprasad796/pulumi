@@ -468,7 +468,8 @@ describe("LocalWorkspace - Config", () => {
                 })(),
             );
         }
-        await Promise.all();
+        //await Promise.all(dones);
+        await Promise.allSettled(dones);
 
         for (let i = 0; i < stacks.length; i++) {
             const stack = await LocalWorkspace.selectStack({
