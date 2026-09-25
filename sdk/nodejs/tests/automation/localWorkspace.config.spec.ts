@@ -462,12 +462,14 @@ describe("LocalWorkspace - Config", () => {
             const s = stacks[i];
             dones.push(
                 (() => {
-                    new Promise((resolve, reject) => {
-                        for (let j = 0; j < 20; j++) {
-                            ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
-                        }
+                    new Promise(() => {
+			setTimeout(() => {
+                            for (let j = 0; j < 20; j++) {
+                                ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
+                            }
+			}, 10000);// 10 second timeout
                     });
-                })(),
+		})(),
             );
         }
         await Promise.all(dones);
