@@ -467,7 +467,7 @@ describe("LocalWorkspace - Config", () => {
                             for (let j = 0; j < 20; j++) {
                                 ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
                             }
-			}, 10000);// 10 second timeout
+			}, 10000);// 10 seconds timeout
                     });
 		})(),
             );
