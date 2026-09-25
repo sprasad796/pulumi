@@ -438,7 +438,7 @@ describe("LocalWorkspace - Config", () => {
         await stack.workspace.removeStack(stackName);
     });
     it(`correctly sets config on multiple stacks concurrently`, async () => {
-        const dones: any[] = [];
+        const dones = [];
         const stacks = ["dev", "dev2", "dev3", "dev4", "dev5"].map((x) =>
             fullyQualifiedStackName("organization", "concurrent-config", `int_test_${x}_${getTestSuffix()}`),
         );
@@ -461,15 +461,11 @@ describe("LocalWorkspace - Config", () => {
             const x = i;
             const s = stacks[i];
             dones.push(
-                (() => {
-                    new Promise(() => {
-			setTimeout(() => {
-                            for (let j = 0; j < 20; j++) {
-                                ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
-                            }
-			}, 10000);// 10 seconds timeout
-                    });
-		})(),
+                (async () => {
+                    for (let j = 0; j < 20; j++) {
+                        await ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
+                    }
+                })(),
             );
         }
         await Promise.all(dones);
