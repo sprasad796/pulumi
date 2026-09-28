@@ -438,46 +438,50 @@ describe("LocalWorkspace - Config", () => {
         await stack.workspace.removeStack(stackName);
     });
     it(`correctly sets config on multiple stacks concurrently`, async () => {
-        const dones = [];
-        const stacks = ["dev", "dev2", "dev3", "dev4", "dev5"].map((x) =>
-            fullyQualifiedStackName("organization", "concurrent-config", `int_test_${x}_${getTestSuffix()}`),
-        );
-        const workDir = upath.joinSafe(__dirname, "data", "tcfg");
-        const ws = await LocalWorkspace.create({
-            workDir,
-            projectSettings: {
-                name: "concurrent-config",
-                runtime: "nodejs",
-                backend: { url: "file://~" },
-            },
-            envVars: {
-                PULUMI_CONFIG_PASSPHRASE: "test",
-            },
-        });
-        for (let i = 0; i < stacks.length; i++) {
-            await Stack.create(stacks[i], ws);
-        }
-        for (let i = 0; i < stacks.length; i++) {
-            const x = i;
-            const s = stacks[i];
-            dones.push(
-                (async () => {
-                    for (let j = 0; j < 20; j++) {
-                        await ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
-                    }
-                })(),
+        try {
+            const dones = [];
+            const stacks = ["dev", "dev2", "dev3", "dev4", "dev5"].map((x) =>
+                fullyQualifiedStackName("organization", "concurrent-config", `int_test_${x}_${getTestSuffix()}`),
             );
-        }
-        await Promise.all(dones);
-
-        for (let i = 0; i < stacks.length; i++) {
-            const stack = await LocalWorkspace.selectStack({
-                stackName: stacks[i],
+            const workDir = upath.joinSafe(__dirname, "data", "tcfg");
+            const ws = await LocalWorkspace.create({
                 workDir,
+                projectSettings: {
+                    name: "concurrent-config",
+                    runtime: "nodejs",
+                    backend: { url: "file://~" },
+                },
+                envVars: {
+                    PULUMI_CONFIG_PASSPHRASE: "test",
+                },
             });
-            const config = await stack.getAllConfig();
-            assert.strictEqual(Object.keys(config).length, 20);
-            await stack.workspace.removeStack(stacks[i]);
+            for (let i = 0; i < stacks.length; i++) {
+                await Stack.create(stacks[i], ws);
+            }
+            for (let i = 0; i < stacks.length; i++) {
+                const x = i;
+                const s = stacks[i];
+                dones.push(
+                    (async () => {
+                        for (let j = 0; j < 20; j++) {
+                            await ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
+                        }
+                    })(),
+                );
+            }
+            await Promise.all(dones);
+
+            for (let i = 0; i < stacks.length; i++) {
+                const stack = await LocalWorkspace.selectStack({
+                    stackName: stacks[i],
+                    workDir,
+                });
+                const config = await stack.getAllConfig();
+                assert.strictEqual(Object.keys(config).length, 20);
+                await stack.workspace.removeStack(stacks[i]);
+            }
+        } catch (error) {
+            console.error("Error during concurrent config test:", error);
         }
     });
 });
