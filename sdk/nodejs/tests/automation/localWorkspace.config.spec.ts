@@ -438,6 +438,8 @@ describe("LocalWorkspace - Config", () => {
         await stack.workspace.removeStack(stackName);
     });
     it(`correctly sets config on multiple stacks concurrently`, async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds
         try {
             const dones = [];
             const stacks = ["dev", "dev2", "dev3", "dev4", "dev5"].map((x) =>
@@ -482,6 +484,8 @@ describe("LocalWorkspace - Config", () => {
             }
         } catch (error) {
             console.error("Error during concurrent config test:", error);
+        } finally {
+            clearTimeout(timeoutId);
         }
     });
 });
