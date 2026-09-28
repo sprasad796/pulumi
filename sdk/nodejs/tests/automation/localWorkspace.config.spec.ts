@@ -464,7 +464,7 @@ describe("LocalWorkspace - Config", () => {
                 const x = i;
                 const s = stacks[i];
                 dones.push(
-                    (async () => {
+                    (async (done) => {
                         for (let j = 0; j < 20; j++) {
                             await ws.setConfig(s, "var-" + j, { value: (x * 20 + j).toString() });
                         }
