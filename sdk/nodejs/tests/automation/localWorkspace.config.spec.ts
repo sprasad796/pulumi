@@ -28,7 +28,7 @@ import { getTestOrg, getTestSuffix, withTestBackend } from "./util";
 import { Config } from "../../config";
 
 describe("LocalWorkspace - Config", () => {
-    /*it(`Config`, async () => {
+    it(`Config`, async () => {
         const projectName = "node_test";
         const projectSettings: ProjectSettings = {
             name: projectName,
@@ -436,7 +436,7 @@ describe("LocalWorkspace - Config", () => {
         validate(events);
 
         await stack.workspace.removeStack(stackName);
-    });*/
+    });
     it(`correctly sets config on multiple stacks concurrently`, async () => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds
