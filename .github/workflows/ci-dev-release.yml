@@ -38,7 +38,6 @@ jobs:
         run: |
           short_sha="x${{ steps.ghd.outputs.short-sha }}"
           version="${{ inputs.version }}"
-          version="${version#v}-alpha.${short_sha}"
           echo dev-version="$version" >>"${GITHUB_OUTPUT}"
     outputs:
       dev-version: ${{ steps.strip-prefix.outputs.dev-version }}
@@ -174,7 +173,7 @@ jobs:
           (
             cd artifacts.tmp/artifacts-nodejs-sdk
             version="${{ inputs.version }}"
-            for file in *"${version}"-alpha*.tgz ; do
+            for file in *"${version}"*.tgz ; do
               mv -vT "$file" "../../artifacts/sdk-nodejs-${file}"
             done
           )
@@ -183,7 +182,7 @@ jobs:
         with:
           node-version: ${{ fromJson(needs.matrix.outputs.version-set).nodejs }}
           registry-url: https://registry.npmjs.org
-          always-auth: true
+          always-auth: false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

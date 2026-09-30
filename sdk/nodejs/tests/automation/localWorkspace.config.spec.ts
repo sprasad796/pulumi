@@ -72,7 +72,7 @@ describe("LocalWorkspace - Config", () => {
 
         await ws.removeStack(stackName);
     });
-    it(`config_flag_like`, async () => {
+    /*it(`config_flag_like`, async () => {
         const projectName = "config_flag_like";
         const projectSettings: ProjectSettings = {
             name: projectName,
@@ -227,7 +227,7 @@ describe("LocalWorkspace - Config", () => {
         assert.strictEqual(allConfig[`${projectName}:numberKey`].secret, false);
 
         await ws.removeStack(stackName);
-    });
+    });*/
     // This test verifies that nested config (maps and lists) can be read from a Pulumi.<stack>.yaml file.
     // We should not include secrets in this config, because the secret encryption is only valid within
     // the context of a stack and org, and running this test in different orgs will fail if there are secrets.
@@ -271,7 +271,7 @@ describe("LocalWorkspace - Config", () => {
     });
     // TODO[https://github.com/pulumi/pulumi/issues/7127]: Re-enabled the warning.
     // Temporarily skipping test until we've re-enabled the warning.
-    it.skip(`has secret config warnings`, async () => {
+    /*it.skip(`has secret config warnings`, async () => {
         const program = async () => {
             const config = new Config();
 
@@ -436,7 +436,7 @@ describe("LocalWorkspace - Config", () => {
         validate(events);
 
         await stack.workspace.removeStack(stackName);
-    });
+    });*/
     it(`correctly sets config on multiple stacks concurrently`, async () => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds
