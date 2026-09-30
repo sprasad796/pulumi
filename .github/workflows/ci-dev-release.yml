@@ -37,6 +37,7 @@ jobs:
         # see https://github.com/pulumi/pulumi/issues/15471 for context.
         run: |
           short_sha="x${{ steps.ghd.outputs.short-sha }}"
+          #version="${{ inputs.version }}-alpha.${short_sha}"
           version="${{ inputs.version }}"
           echo dev-version="$version" >>"${GITHUB_OUTPUT}"
     outputs:
@@ -173,7 +174,8 @@ jobs:
           (
             cd artifacts.tmp/artifacts-nodejs-sdk
             version="${{ inputs.version }}"
-            for file in *"${version}"*.tgz ; do
+            #for file in *"${version}"*.tgz ; do
+            for file in *"${version}"-alpha*.tgz ; do
               mv -vT "$file" "../../artifacts/sdk-nodejs-${file}"
             done
           )
@@ -182,7 +184,7 @@ jobs:
         with:
           node-version: ${{ fromJson(needs.matrix.outputs.version-set).nodejs }}
           registry-url: https://registry.npmjs.org
-          always-auth: false
+          always-auth: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -289,9 +291,9 @@ jobs:
             cd artifacts
             version="${{ inputs.version }}"
             dev_version="${{ needs.gather-info.outputs.dev-version }}"
-            for file in *; do
-              mv "$file" "${file//$version/$dev_version}"
-            done
+            #for file in *; do
+            #  mv "$file" "${file//$version/$dev_version}"
+            #done
           )
       - name: Find artifacts
         run: |
