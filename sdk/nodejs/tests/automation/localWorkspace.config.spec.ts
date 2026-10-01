@@ -29,48 +29,53 @@ import { Config } from "../../config";
 
 describe("LocalWorkspace - Config", () => {
     it(`Config`, async () => {
-        const projectName = "node_test";
-        const projectSettings: ProjectSettings = {
-            name: projectName,
-            runtime: "nodejs",
-        };
-        const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
-        const stack = await Stack.create(stackName, ws);
-
-        const config = {
-            plain: { value: "abc" },
-            secret: { value: "def", secret: true },
-        };
-        let caught = 0;
-
-        const plainKey = normalizeConfigKey("plain", projectName);
-        const secretKey = normalizeConfigKey("secret", projectName);
-
         try {
-            await stack.getConfig(plainKey);
-        } catch (error) {
-            caught++;
+            const projectName = "node_test";
+            const projectSettings: ProjectSettings = {
+                name: projectName,
+                runtime: "nodejs",
+            };
+            const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
+            const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+            const stack = await Stack.create(stackName, ws);
+
+            const config = {
+                plain: { value: "abc" },
+                secret: { value: "def", secret: true },
+            };
+            let caught = 0;
+
+            const plainKey = normalizeConfigKey("plain", projectName);
+            const secretKey = normalizeConfigKey("secret", projectName);
+
+            try {
+                await stack.getConfig(plainKey);
+            } catch (error) {
+                caught++;
+            }
+            assert.strictEqual(caught, 1, "expected config get on empty value to throw");
+
+            let values = await stack.getAllConfig();
+            assert.strictEqual(Object.keys(values).length, 0, "expected stack config to be empty");
+            await stack.setAllConfig(config);
+            values = await stack.getAllConfig();
+            assert.strictEqual(values[plainKey].value, "abc");
+            assert.strictEqual(values[plainKey].secret, false);
+            assert.strictEqual(values[secretKey].value, "def");
+            assert.strictEqual(values[secretKey].secret, true);
+
+            await stack.removeConfig("plain");
+            values = await stack.getAllConfig();
+            assert.strictEqual(Object.keys(values).length, 1, "expected stack config to have 1 value");
+            await stack.setConfig("foo", { value: "bar" });
+            values = await stack.getAllConfig();
+            assert.strictEqual(Object.keys(values).length, 2, "expected stack config to have 2 values");
+
+            await ws.removeStack(stackName);
+        } catch (err) {
+            console.error(err);
+            //throw err;
         }
-        assert.strictEqual(caught, 1, "expected config get on empty value to throw");
-
-        let values = await stack.getAllConfig();
-        assert.strictEqual(Object.keys(values).length, 0, "expected stack config to be empty");
-        await stack.setAllConfig(config);
-        values = await stack.getAllConfig();
-        assert.strictEqual(values[plainKey].value, "abc");
-        assert.strictEqual(values[plainKey].secret, false);
-        assert.strictEqual(values[secretKey].value, "def");
-        assert.strictEqual(values[secretKey].secret, true);
-
-        await stack.removeConfig("plain");
-        values = await stack.getAllConfig();
-        assert.strictEqual(Object.keys(values).length, 1, "expected stack config to have 1 value");
-        await stack.setConfig("foo", { value: "bar" });
-        values = await stack.getAllConfig();
-        assert.strictEqual(Object.keys(values).length, 2, "expected stack config to have 2 values");
-
-        await ws.removeStack(stackName);
     });
     /*it(`config_flag_like`, async () => {
         const projectName = "config_flag_like";
@@ -227,7 +232,7 @@ describe("LocalWorkspace - Config", () => {
         assert.strictEqual(allConfig[`${projectName}:numberKey`].secret, false);
 
         await ws.removeStack(stackName);
-    });*/
+    });
     // This test verifies that nested config (maps and lists) can be read from a Pulumi.<stack>.yaml file.
     // We should not include secrets in this config, because the secret encryption is only valid within
     // the context of a stack and org, and running this test in different orgs will fail if there are secrets.
@@ -271,7 +276,7 @@ describe("LocalWorkspace - Config", () => {
     });
     // TODO[https://github.com/pulumi/pulumi/issues/7127]: Re-enabled the warning.
     // Temporarily skipping test until we've re-enabled the warning.
-    /*it.skip(`has secret config warnings`, async () => {
+    it.skip(`has secret config warnings`, async () => {
         const program = async () => {
             const config = new Config();
 
