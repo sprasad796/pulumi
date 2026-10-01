@@ -174,8 +174,8 @@ jobs:
           (
             cd artifacts.tmp/artifacts-nodejs-sdk
             version="${{ inputs.version }}"
-            #for file in *"${version}"*.tgz ; do
-            for file in *"${version}"-alpha*.tgz ; do
+            for file in *"${version}"*.tgz ; do
+            #for file in *"${version}"-alpha*.tgz ; do
               mv -vT "$file" "../../artifacts/sdk-nodejs-${file}"
             done
           )
