@@ -29,6 +29,8 @@ import { Config } from "../../config";
 
 describe("LocalWorkspace - Config", () => {
     it("Config", async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds
         try {
             const projectName = "node_test";
             const projectSettings: ProjectSettings = {
@@ -74,6 +76,9 @@ describe("LocalWorkspace - Config", () => {
             await ws.removeStack(stackName);
         } catch (err) {
             assert.ok(err instanceof Error);
+            throw err;
+        } finally {
+            clearTimeout(timeoutId);
         }
     });
     /*it(`config_flag_like`, async () => {
