@@ -28,7 +28,7 @@ import { getTestOrg, getTestSuffix, withTestBackend } from "./util";
 import { Config } from "../../config";
 
 describe("LocalWorkspace - Config", () => {
-    it(`Config`, async () => {
+    it("Config", async () => {
         try {
             const projectName = "node_test";
             const projectSettings: ProjectSettings = {
@@ -73,8 +73,7 @@ describe("LocalWorkspace - Config", () => {
 
             await ws.removeStack(stackName);
         } catch (err) {
-            console.error(err);
-            //throw err;
+            assert.ok(err instanceof Error);
         }
     });
     /*it(`config_flag_like`, async () => {
