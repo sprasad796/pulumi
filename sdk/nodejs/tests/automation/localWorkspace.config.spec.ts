@@ -38,9 +38,15 @@ describe("LocalWorkspace - Config", () => {
                 runtime: "nodejs",
             };
             console.log("Creating Local workspace ");
-            const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-            console.log("Local workspace is created");
-            const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+            //#const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
+            //#console.log("Local workspace is created");
+            //#const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+
+            const [ws, stackName] = await Promise.all([
+                LocalWorkspace.create(withTestBackend({ projectSettings })),
+                fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`),
+            ]);
+
             const stack = await Stack.create(stackName, ws);
             console.log("Stack is created");
 
@@ -79,6 +85,7 @@ describe("LocalWorkspace - Config", () => {
             assert.strictEqual(Object.keys(values).length, 2, "expected stack config to have 2 values");
 
             await ws.removeStack(stackName);
+            console.log("Stack is removed");
         } catch (err) {
             assert.ok(err instanceof Error);
             throw err;
@@ -475,6 +482,7 @@ describe("LocalWorkspace - Config", () => {
                 await Stack.create(stacks[i], ws);
             }
             for (let i = 0; i < stacks.length; i++) {
+                console.log(" check if this priNNNNNNNNNNN ");
                 const x = i;
                 const s = stacks[i];
                 dones.push(
