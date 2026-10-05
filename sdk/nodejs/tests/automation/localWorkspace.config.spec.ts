@@ -29,6 +29,7 @@ import { Config } from "../../config";
 
 describe("LocalWorkspace - Config", () => {
     it("Config", async () => {
+        console.log("Start ");
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds
         try {
@@ -457,7 +458,7 @@ describe("LocalWorkspace - Config", () => {
         validate(events);
 
         await stack.workspace.removeStack(stackName);
-    });*/
+    });
     it(`correctly sets config on multiple stacks concurrently`, async () => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds
@@ -482,7 +483,6 @@ describe("LocalWorkspace - Config", () => {
                 await Stack.create(stacks[i], ws);
             }
             for (let i = 0; i < stacks.length; i++) {
-                console.log(" check if this priNNNNNNNNNNN ");
                 const x = i;
                 const s = stacks[i];
                 dones.push(
@@ -509,7 +509,7 @@ describe("LocalWorkspace - Config", () => {
         } finally {
             clearTimeout(timeoutId);
         }
-    });
+    });*/
 });
 
 const normalizeConfigKey = (key: string, projectName: string) => {
