@@ -41,7 +41,9 @@ describe("LocalWorkspace - Config", () => {
             console.log("Creating Local workspace ");
             const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
             console.log("Local workspace is created");
-            const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+            const org = await getTestOrg();
+            console.log("Org is ", org);
+            const stackName = fullyQualifiedStackName(org, projectName, `int_test${getTestSuffix()}`);
 
             /*const [ws, stackName] = await Promise.all([
                 LocalWorkspace.create(withTestBackend({ projectSettings })),
