@@ -39,14 +39,14 @@ describe("LocalWorkspace - Config", () => {
                 runtime: "nodejs",
             };
             console.log("Creating Local workspace ");
-            //#const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-            //#console.log("Local workspace is created");
-            //#const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+            const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
+            console.log("Local workspace is created");
+            const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
 
-            const [ws, stackName] = await Promise.all([
+            /*const [ws, stackName] = await Promise.all([
                 LocalWorkspace.create(withTestBackend({ projectSettings })),
                 fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`),
-            ]);
+            ]);*/
 
             const stack = await Stack.create(stackName, ws);
             console.log("Stack is created");
@@ -68,7 +68,7 @@ describe("LocalWorkspace - Config", () => {
             console.log("Config is returned based on plain key");
             assert.strictEqual(caught, 1, "expected config get on empty value to throw");
 
-            /*let values = await stack.getAllConfig();
+            let values = await stack.getAllConfig();
             assert.strictEqual(Object.keys(values).length, 0, "expected stack config to be empty");
             await stack.setAllConfig(config);
             console.log("All Config is returned based on config");
@@ -77,8 +77,10 @@ describe("LocalWorkspace - Config", () => {
             assert.strictEqual(values[plainKey].secret, false);
             assert.strictEqual(values[secretKey].value, "def");
             assert.strictEqual(values[secretKey].secret, true);
+            console.log("Config values are matched");
 
             await stack.removeConfig("plain");
+            console.log("Start removing config");
             values = await stack.getAllConfig();
             assert.strictEqual(Object.keys(values).length, 1, "expected stack config to have 1 value");
             await stack.setConfig("foo", { value: "bar" });
@@ -86,7 +88,8 @@ describe("LocalWorkspace - Config", () => {
             assert.strictEqual(Object.keys(values).length, 2, "expected stack config to have 2 values");
 
             await ws.removeStack(stackName);
-            console.log("Stack is removed");*/
+            console.log("Stack is removed");
+            return;
         } catch (err) {
             assert.ok(err instanceof Error);
             throw err;
