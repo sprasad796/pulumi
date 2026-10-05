@@ -291,9 +291,6 @@ jobs:
             cd artifacts
             version="${{ inputs.version }}"
             dev_version="${{ needs.gather-info.outputs.dev-version }}"
-            #for file in *; do
-            #  mv "$file" "${file//$version/$dev_version}"
-            #done
           )
       - name: Find artifacts
         run: |

@@ -31,7 +31,6 @@ const org = getTestOrg();
 
 describe("LocalWorkspace - Config", () => {
     it("Config", async () => {
-        console.log("Start ");
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 seconds
         try {
@@ -40,21 +39,9 @@ describe("LocalWorkspace - Config", () => {
                 name: projectName,
                 runtime: "nodejs",
             };
-            console.log("Creating Local workspace ");
             const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-            console.log("Local workspace is created");
-            //const org = await getTestOrg();
-            console.log("Org is ", org);
             const stackName = fullyQualifiedStackName(org, projectName, `int_test${getTestSuffix()}`);
-
-            /*const [ws, stackName] = await Promise.all([
-                LocalWorkspace.create(withTestBackend({ projectSettings })),
-                fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`),
-            ]);*/
-
             const stack = await Stack.create(stackName, ws);
-            console.log("Stack is created");
-
             const config = {
                 plain: { value: "abc" },
                 secret: { value: "def", secret: true },
@@ -69,22 +56,18 @@ describe("LocalWorkspace - Config", () => {
             } catch (error) {
                 caught++;
             }
-            console.log("Config is returned based on plain key");
             assert.strictEqual(caught, 1, "expected config get on empty value to throw");
 
             let values = await stack.getAllConfig();
             assert.strictEqual(Object.keys(values).length, 0, "expected stack config to be empty");
             await stack.setAllConfig(config);
-            console.log("All Config is returned based on config");
             values = await stack.getAllConfig();
             assert.strictEqual(values[plainKey].value, "abc");
             assert.strictEqual(values[plainKey].secret, false);
             assert.strictEqual(values[secretKey].value, "def");
             assert.strictEqual(values[secretKey].secret, true);
-            console.log("Config values are matched");
 
             await stack.removeConfig("plain");
-            console.log("Start removing config");
             values = await stack.getAllConfig();
             assert.strictEqual(Object.keys(values).length, 1, "expected stack config to have 1 value");
             await stack.setConfig("foo", { value: "bar" });
@@ -92,7 +75,6 @@ describe("LocalWorkspace - Config", () => {
             assert.strictEqual(Object.keys(values).length, 2, "expected stack config to have 2 values");
 
             await ws.removeStack(stackName);
-            console.log("Stack is removed");
             return;
         } catch (err) {
             assert.ok(err instanceof Error);
@@ -101,7 +83,7 @@ describe("LocalWorkspace - Config", () => {
             clearTimeout(timeoutId);
         }
     });
-    /*it(`config_flag_like`, async () => {
+    it(`config_flag_like`, async () => {
         const projectName = "config_flag_like";
         const projectSettings: ProjectSettings = {
             name: projectName,
@@ -136,7 +118,7 @@ describe("LocalWorkspace - Config", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(org, projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
 
         // test backward compatibility
@@ -223,7 +205,7 @@ describe("LocalWorkspace - Config", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(org, projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
 
         // Set config using JSON format
@@ -262,7 +244,7 @@ describe("LocalWorkspace - Config", () => {
     // the context of a stack and org, and running this test in different orgs will fail if there are secrets.
     it(`nested_config`, async () => {
         const sName = `int_test${getTestSuffix()}`;
-        const stackName = fullyQualifiedStackName(await getTestOrg(), "nested_config", sName);
+        const stackName = fullyQualifiedStackName(org, "nested_config", sName);
         const workDir = upath.joinSafe(__dirname, "data", "nested_config");
 
         // Copy Pulumi.dev.yaml to a stack-specific config file so we use a unique stack name
@@ -345,7 +327,7 @@ describe("LocalWorkspace - Config", () => {
             config.requireSecretObject("obj4");
         };
         const projectName = "inline_node";
-        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(org, projectName, `int_test${getTestSuffix()}`);
         const stack = await LocalWorkspace.createStack(
             { stackName, projectName, program },
             withTestBackend({}, "inline_node"),
@@ -516,7 +498,7 @@ describe("LocalWorkspace - Config", () => {
         } finally {
             clearTimeout(timeoutId);
         }
-    });*/
+    });
 });
 
 const normalizeConfigKey = (key: string, projectName: string) => {
