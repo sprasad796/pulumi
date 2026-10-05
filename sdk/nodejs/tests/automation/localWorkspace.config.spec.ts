@@ -27,6 +27,8 @@ import {
 import { getTestOrg, getTestSuffix, withTestBackend } from "./util";
 import { Config } from "../../config";
 
+const org = getTestOrg();
+
 describe("LocalWorkspace - Config", () => {
     it("Config", async () => {
         console.log("Start ");
@@ -41,7 +43,7 @@ describe("LocalWorkspace - Config", () => {
             console.log("Creating Local workspace ");
             const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
             console.log("Local workspace is created");
-            const org = await getTestOrg();
+            //const org = await getTestOrg();
             console.log("Org is ", org);
             const stackName = fullyQualifiedStackName(org, projectName, `int_test${getTestSuffix()}`);
 
@@ -106,7 +108,7 @@ describe("LocalWorkspace - Config", () => {
             runtime: "nodejs",
         };
         const ws = await LocalWorkspace.create(withTestBackend({ projectSettings }));
-        const stackName = fullyQualifiedStackName(await getTestOrg(), projectName, `int_test${getTestSuffix()}`);
+        const stackName = fullyQualifiedStackName(org, projectName, `int_test${getTestSuffix()}`);
         const stack = await Stack.create(stackName, ws);
         await stack.setConfig("key", { value: "-value" });
         await stack.setConfig("secret-key", { value: "-value", secret: true });

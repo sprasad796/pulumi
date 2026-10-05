@@ -38,14 +38,14 @@ export async function getTestOrg() {
         return test_org;
     }
 
-    const pulumi_whoami_org = await getUserName();
+    const pulumi_whoami_org: string = await getUserName();
 
     if (pulumi_whoami_org) {
         return pulumi_whoami_org;
     }
 
     if (process.env.PULUMI_ACCESS_TOKEN) {
-        test_org = "moolumi";
+        test_org = "pulumi-test";
     }
     // Use "organization" for local file backend
     return test_org;
