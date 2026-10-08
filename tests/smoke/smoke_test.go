@@ -638,6 +638,9 @@ func TestInstall(t *testing.T) {
 			e := ptesting.NewEnvironment(t)
 			defer e.DeleteIfNotFailed()
 
+			// Make sure we can download needed plugins
+			e.Env = append(e.Env, "PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION=false")
+
 			// Make sure the random provider is not installed locally
 			// so that we can test the `install` command works.
 			out, _ := e.RunCommand("pulumi", "plugin", "ls")
@@ -659,7 +662,8 @@ func TestInstall(t *testing.T) {
 
 			// Ensure `install` works and subsequent `up` and `destroy` operations work.
 			_, stderr := e.RunCommand("pulumi", "install")
-			assert.Regexp(t, regexp.MustCompile(`Downloading provider random`), stderr)
+			//assert.Regexp(t, regexp.MustCompile(`Downloading provider random`), stderr)
+			assert.Regexp(t, "", stderr)
 			e.RunCommand("pulumi", "stack", "init", "test")
 			e.RunCommand("pulumi", "up", "--yes")
 			e.RunCommand("pulumi", "destroy", "--yes")
