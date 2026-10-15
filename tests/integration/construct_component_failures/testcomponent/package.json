@@ -1,15 +1,14 @@
 {
-  "dependencies": {
-    "@grpc/grpc-js": "1.14.4",
-    "@pulumi/pulumi": "file:/var/folders/cs/j99_1rrs36j337ms9h5s0msc0000gn/T/pulumi-core-sdk-758927380/pulumi-pulumi-3.260.0-dev.0.tgz"
-  },
-  "devDependencies": {
-    "@types/node": "ts3.9",
-    "typescript": "3.9.10"
-  },
-  "main": "index.js",
-  "name": "pulumi-resource-testcomponent",
-  "overrides": {
-    "@pulumi/pulumi": "file:/var/folders/cs/j99_1rrs36j337ms9h5s0msc0000gn/T/pulumi-core-sdk-758927380/pulumi-pulumi-3.260.0-dev.0.tgz"
-  }
+    "name": "pulumi-resource-testcomponent",
+    "main": "index.js",
+    "devDependencies": {
+        "@types/node": "ts3.9",
+        "typescript": "3.9.10"
+    },
+    "dependencies": {
+        "@grpc/grpc-js": "1.14.4"
+    },
+    "peerDependencies": {
+        "@pulumi/pulumi": "latest"
+    }
 }
