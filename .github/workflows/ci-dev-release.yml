@@ -232,7 +232,12 @@ jobs:
           (
             cd artifacts.tmp/artifacts-python-sdk
             for file in *"${version}a"*.whl ; do
-              mv -vT "$file" "../../artifacts/sdk-python-${file}"
+              if [[ -e "$file" ]]; then
+                 stat "$file"
+                 mv -vT "$file" "../../artifacts/sdk-python-${file}"
+              else
+                 echo "File $file doesn't exist."
+              fi
             done
           )
       - name: Publish python release
