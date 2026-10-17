@@ -17,7 +17,7 @@ python = '3.11'
 uv = "0.11.28"
 # This is a dev only dependency that fails to install on windows
 "go:github.com/mitranim/gow" = { version = "0.0.0-20260515002309-3b8e4d082711", os = ["linux", "macos"] }
-protoc = "29.5"
+protoc = "36.2"
 "go:google.golang.org/protobuf/cmd/protoc-gen-go" = "v1.36.6"
 "go:google.golang.org/grpc/cmd/protoc-gen-go-grpc" = "v1.5.1"
 "npm:grpc-tools" = { version = "1.13.0", npm_args = "--ignore-scripts=false" }
