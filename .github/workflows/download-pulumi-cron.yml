@@ -16,12 +16,16 @@ jobs:
       # Workaround for https://github.com/pulumi/pulumi/issues/13938
       - name: Delete default golang installed on the runner
         run: |
-          rm /usr/local/bin/go || true
-          rm /usr/local/bin/gofmt || true
+          if [ -d "/usr/local/bin/go" ]; then
+             rm /usr/local/bin/go || true
+             rm /usr/local/bin/gofmt || true
+          fi
       - name: homedate homebrew formulae
         run: brew update
       - name: homebrew install
-        run: brew install pulumi
+        run: |
+             brew uninstall pulumi
+             brew install pulumi
       - name: Pulumi Version Details
         id: vars
         run: |
