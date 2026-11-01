@@ -24,7 +24,7 @@ jobs:
         run: brew update
       - name: homebrew install
         run: |
-          if [ brew uninstall pulumi 2>/dev/null ]; then
+          if brew uninstall pulumi 2>/dev/null ; then
              echo "Package successfully uninstalled."
           else
              echo "Uninstallation failed! The Package might not exist."
