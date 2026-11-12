@@ -7,7 +7,7 @@ name = "pulumi"
 version = "3.260.0"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 description = "Pulumi's Python SDK"
 readme = "README.md"
 classifiers = [
@@ -137,7 +137,7 @@ quote-style = "double"
 
 [tool.mypy]
 # The minimum Python version we support
-python_version = "3.10"
+python_version = "3.12"
 warn_redundant_casts = true
 
 [[tool.mypy.overrides]]
