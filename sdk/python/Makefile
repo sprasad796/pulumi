@@ -123,7 +123,7 @@ clean::
 publish:: ensure
 	for file in ../../artifacts/sdk-python-*.whl; do \
 		basename=$$(basename $${file}); \
-		# mv -vT "$${file}" "../../artifacts/$${basename##sdk-python-}"; \
+		mv -v "$${file}" "../../artifacts/$${basename##sdk-python-}"; \
 	done
 	uv run twine upload \
 	-u "${PYPI_USERNAME}" -p "${PYPI_PASSWORD}" \
