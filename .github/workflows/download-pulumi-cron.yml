@@ -12,6 +12,7 @@ jobs:
   macos-homebrew-install:
     name: Install Pulumi with Homebrew on macOS
     runs-on: macos-latest
+    timeout-minutes: 20
     steps:
       # Workaround for https://github.com/pulumi/pulumi/issues/13938
       - name: Delete default golang installed on the runner
@@ -42,6 +43,10 @@ jobs:
         run: |
           echo "Expected version ${{ steps.vars.outputs.expected-version }} but found ${{ steps.vars.outputs.installed-version }}"
           exit 1
+      - name: Handle failure or timeout
+        if: failure()
+        run: |
+          echo "Job failed or timed out after 3 attempts!"
   macOS-direct-install:
     name: Install Pulumi via script on macOS
     runs-on: macos-latest
