@@ -7,7 +7,7 @@ name = "pulumi"
 version = "3.260.0"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 description = "Pulumi's Python SDK"
 readme = "README.md"
 classifiers = [
